@@ -1,0 +1,29 @@
+{
+  "name": "webpack-demo",
+  "private": "true",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack",
+    "start": "webpack serve --open"
+  },
+  "devDependencies": {
+    "bemto.pug": "^2.1.0",
+    "clean-webpack-plugin": "^4.0.0",
+    "html-webpack-plugin": "^5.6.3",
+    "path": "^0.12.7",
+    "pug-plugin": "^6.0.0",
+    "sass": "^1.89.0",
+    "sass-loader": "^16.0.5",
+    "ts-loader": "^9.5.2",
+    "typescript": "^5.8.3",
+    "webpack": "^5.99.8",
+    "webpack-cli": "^6.0.1",
+    "webpack-dev-server": "^5.2.1"
+  },
+  "dependencies": {
+    "@prettier/plugin-pug": "^3.4.0",
+    "bootstrap": "^5.3.6",
+    "css-loader": "^7.1.2",
+    "style-loader": "^4.0.0"
+  }
+}

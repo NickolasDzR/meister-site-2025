@@ -1,0 +1,8 @@
+extends layouts/default
+
+include blocks/modules/nav/nav
+
+block content
+    include ../../node_modules/bemto.pug/bemto.pug
+    +b.HEADER.header
+        +nav({class: 'header__nav'})
