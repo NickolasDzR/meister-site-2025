@@ -1,2 +1,5 @@
 mixin nav(value = false)
-    nav.nav(class=value.class) basdals
+    +b.NAV.nav(class=value.class)
+        +e.list
+            each itemText in value.items
+                +e.item= itemText

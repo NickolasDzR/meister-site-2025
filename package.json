@@ -4,12 +4,11 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack",
-    "start": "webpack serve --open"
+    "dev": "webpack serve --open"
   },
   "devDependencies": {
     "bemto.pug": "^2.1.0",
     "clean-webpack-plugin": "^4.0.0",
-    "html-webpack-plugin": "^5.6.3",
     "path": "^0.12.7",
     "pug-plugin": "^6.0.0",
     "sass": "^1.89.0",
@@ -24,6 +23,11 @@
     "@prettier/plugin-pug": "^3.4.0",
     "bootstrap": "^5.3.6",
     "css-loader": "^7.1.2",
-    "style-loader": "^4.0.0"
+    "html-webpack-inline-svg-plugin": "^2.3.0",
+    "html-webpack-plugin": "^5.6.3",
+    "style-loader": "^4.0.0",
+    "svg-sprite-loader": "^6.0.11",
+    "svg-spritemap-webpack-plugin": "^4.7.0",
+    "webpack-svg-spritely": "^2.2.23"
   }
 }

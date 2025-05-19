@@ -1,8 +1,23 @@
 extends layouts/default
 
 include blocks/modules/nav/nav
+include blocks/modules/logo/logo
+include blocks/components/graphic/graphic
+
+block variables
+    -
+        var
+            nav = ["Новости", "Расчитать доставку", "Контакты"]
 
 block content
     include ../../node_modules/bemto.pug/bemto.pug
     +b.HEADER.header
-        +nav({class: 'header__nav'})
+        +b.container
+            +b.row
+                +logo()
+                +nav({
+                    class: 'header__nav',
+                    items: nav
+                })
+    +b.MAIN
+    +b.FOOTER

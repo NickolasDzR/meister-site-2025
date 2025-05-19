@@ -1,4 +1,5 @@
-@use 'helpers/variables' as variables;
-@use 'base/global';
+@import 'helpers/variables.scss';
+@import 'base/global.scss';
+@import 'helpers/grid.scss';
 
-@use '../views/blocks/modules/nav/nav';
+@import '../views/blocks/modules/nav/nav';

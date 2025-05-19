@@ -1,7 +1,7 @@
 const PugPlugin = require('pug-plugin');
 const path = require('path');
-const HtmlWebpackPlugin = require("html-webpack-plugin");
 const {CleanWebpackPlugin} = require("clean-webpack-plugin");
+const SVGSpritemapPlugin = require('svg-spritemap-webpack-plugin');
 
 module.exports = {
     mode: 'development',
@@ -18,6 +18,20 @@ module.exports = {
             }
         }),
         new CleanWebpackPlugin(),
+        new SVGSpritemapPlugin('src/images/svg/**/*.svg', {
+            output: {
+                filename: '../src/images/sprites/sprite.svg',
+                svgo: true,
+                svg4everybody: true,
+                chunk: { keep: true }
+            },
+            sprite: {
+                prefix: "",
+            },
+            styles: {
+                keepAttributes: true,
+            }
+        }),
     ],
 
     module: {
@@ -29,7 +43,23 @@ module.exports = {
             },
             {
                 test: /\.(css|sass|scss)$/,
-                use: ['css-loader', 'sass-loader'],
+                use: ['css-loader', {
+                    loader: 'sass-loader',
+                    options: {
+                        // Отключаем warnings на import'ы bootstrapa
+                        warnRuleAsWarning: false,
+                        sassOptions: {
+                            quietDeps: true,
+                            silenceDeprecations: [
+                                "legacy-js-api",
+                                "global-builtin",
+                                "new-global",
+                                "color-functions",
+                                "import"
+                            ],
+                        }
+                    }
+                }],
             },
             {
                 test: /\.(woff(2)?|ttf|otf|eot|svg)$/,
@@ -40,12 +70,19 @@ module.exports = {
                     filename: (pathData) => `fonts/${path.basename(
                         path.dirname(pathData.filename))}/[name][ext][query]`,
                 },
-            }
+            },
+            {
+                test: /\.(png|svg|jpg|jpeg|gif|webp)$/i,
+                type: 'asset/resource',
+            },
         ],
     },
 
     resolve: {
         extensions: ['.ts', '.js'],
+        alias: {
+            "~": path.resolve(__dirname, 'node_modules'),
+        }
     },
 
     devtool: 'inline-source-map',
@@ -60,4 +97,8 @@ module.exports = {
     optimization: {
         runtimeChunk: 'single',
     },
+
+    stats: {
+        warnings: true
+    }
 }

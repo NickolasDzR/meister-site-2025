@@ -1,0 +1,32 @@
+@use 'sass:math';
+
+.container {
+    max-width: 1560px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-left: -15px;
+    margin-right: -15px;
+
+    & > * {
+        width: 100%;
+        max-width: 100%;
+        padding-right: 15px;
+        padding-left: 15px;
+
+    }
+}
+
+.d-none {
+    display: none;
+}
+
+.d-block {
+    display: block;
+}
