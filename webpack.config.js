@@ -81,7 +81,8 @@ module.exports = {
     resolve: {
         extensions: ['.ts', '.js'],
         alias: {
-            "~": path.resolve(__dirname, 'node_modules'),
+            "~": path.resolve(__dirname, 'node_modules/'),
+            "@components": path.resolve(__dirname, 'src/views/blocks/components/'),
         }
     },
 

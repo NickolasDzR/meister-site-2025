@@ -25,6 +25,7 @@
     "css-loader": "^7.1.2",
     "html-webpack-inline-svg-plugin": "^2.3.0",
     "html-webpack-plugin": "^5.6.3",
+    "reset-css": "^5.0.2",
     "style-loader": "^4.0.0",
     "svg-sprite-loader": "^6.0.11",
     "svg-spritemap-webpack-plugin": "^4.7.0",

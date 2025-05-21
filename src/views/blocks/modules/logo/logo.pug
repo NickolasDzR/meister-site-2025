@@ -1,8 +1,8 @@
 mixin logo(value = false)
-    +b.logo
-        +e.logo__wrapper
-            +icon({
-                name: "logo-common",
-                viewbox: '0 0 713.59 234.66',
-                class: 'logo_icon'
-            })
+    - var svgClass = value.svgClass ? 'logo__icon ' + value.svgClass : 'logo__icon'
+    +b.logo(class=value.parentClass)
+        +icon({
+            name: "logo-common",
+            viewbox: '0 0 713.59 234.66',
+            class: svgClass
+        })

@@ -1,5 +1,34 @@
-@import 'helpers/variables.scss';
-@import 'base/global.scss';
-@import 'helpers/grid.scss';
+@import 'helpers/variables';
+@import 'helpers/reset';
+@import 'base/global';
+@import 'helpers/grid';
+
+@import '../views/blocks/components/hamburger/hamburger';
 
 @import '../views/blocks/modules/nav/nav';
+@import '../views/blocks/modules/logo/logo';
+@import '../views/blocks/modules/soc/soc';
+@import '../views/blocks/modules/contacts/contacts';
+
+.header {
+    padding-top: 22px;
+    padding-bottom: 20px;
+    background-color: gray;
+
+    &__logo {
+        flex: 0;
+    }
+
+    &__hamburger {
+        flex: 0;
+        margin-left: auto;
+    }
+
+    &__nav {
+        position: fixed;
+        top: 96px;
+        right: 0;
+        bottom: 0;
+        left: 0;
+    }
+}

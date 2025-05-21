@@ -1,0 +1,8 @@
+mixin contacts(value = false)
+    +b.contacts(class=value.parentClass)
+        +e.UL.list
+            each item in value.items
+                +e.item
+                    +e.A.link-title(href=item['titleLink'])= item['title']
+                    if item['subtitle']
+                        +e.A.link-subtitle(href=item['subtitleLink'])= item['subtitle']

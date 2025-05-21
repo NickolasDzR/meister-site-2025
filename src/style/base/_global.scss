@@ -1,9 +1,25 @@
-@use "../helpers/variables" as var;
+* {
+    box-sizing: border-box;
+}
 
 body {
-    font-family: var.$font-family;
+    font-family: $font-family;
     min-width: 320px;
     overflow-x: hidden;
-    color: var.$black;
+    color: $black;
     margin: 0;
+    height: 100%;
+    width: 100%;
 }
+
+.js-hamburger-activator {
+    opacity: 0;
+    pointer-events: none;
+    transition: all .3s ease;
+
+    &.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
+}
+

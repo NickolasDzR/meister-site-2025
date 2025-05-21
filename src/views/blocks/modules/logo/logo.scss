@@ -1,0 +1,11 @@
+.logo {
+    &__icon {
+        width: 157px;
+        height: 55px;
+
+        @media (min-width: $break_md) {
+            width: 173px;
+            height: 66px;
+        }
+    }
+}

@@ -1,0 +1,10 @@
+mixin soc(value = false)
+    +b.soc(class=value.parentClass)
+        +e.list
+            each item in value.items
+                +e.LI.item
+                    +e.A.link(href=item['link'])
+                        +icon({
+                            name: item['name'],
+                            class: 'soc__svg ' + svgClass ? svgClass : ''
+                        })

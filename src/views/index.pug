@@ -1,23 +1,44 @@
 extends layouts/default
 
+include blocks/components/graphic/graphic
+include blocks/components/hamburger/hamburger
+
 include blocks/modules/nav/nav
 include blocks/modules/logo/logo
-include blocks/components/graphic/graphic
+include blocks/modules/soc/soc
+include blocks/modules/contacts/contacts
 
 block variables
     -
         var
-            nav = ["Новости", "Расчитать доставку", "Контакты"]
+            nav = [{link: '#', text: "Новости"}, {link: '#', text: "Расчитать доставку"}, {link: '#', text: "Контакты"}]
+            soc = [{link: '#', name: 'ws'}, {link: '#', name: 'tg'}, {link: '#', name: 'vk'}]
+            contacts = [{title: '+7 (999) 120 59 82', titleLink: '#', subtitle: 'nickolasdzr@yandex.ru', subtitleLink: '#'}]
 
 block content
     include ../../node_modules/bemto.pug/bemto.pug
     +b.HEADER.header
-        +b.container
-            +b.row
-                +logo()
-                +nav({
-                    class: 'header__nav',
-                    items: nav
+        .container
+            .row
+                +logo({
+                    parentClass: 'header__logo'
                 })
+                +hamburger({class: "header__hamburger"})
+                +e.mob-nav.js-hamburger-activator
+                    +nav({
+                        parentClass: 'header__nav',
+                        items: nav
+                    })
+                    +contacts({
+                        parentClass: 'header__contacts',
+                        items: contacts,
+                    })
+                    +soc({
+                        parentClass: 'header_soc',
+                        items: soc,
+                    })
     +b.MAIN
     +b.FOOTER
+
+block scripts
+    script(src='../ts/main.ts')
