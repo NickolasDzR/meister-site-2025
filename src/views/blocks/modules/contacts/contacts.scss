@@ -1,0 +1,26 @@
+.contacts {
+    &__link-title, &__link-subtitle {
+        text-decoration: none;
+        color: $black;
+    }
+
+    &__link-title {
+        font-size: 18px;
+        font-weight: 800;
+        line-height: 1.52;
+        margin-bottom: 1px;
+        white-space: nowrap;
+    }
+
+    &__link-subtitle {
+        font-size: 16px;
+        font-weight: 300;
+        color: $lightGray;
+    }
+
+    &__item {
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+    }
+}

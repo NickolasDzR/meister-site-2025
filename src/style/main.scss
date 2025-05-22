@@ -13,22 +13,77 @@
 .header {
     padding-top: 22px;
     padding-bottom: 20px;
-    background-color: gray;
 
     &__logo {
         flex: 0;
+
+        @media (min-width: $break_md) {
+            margin-right: auto;
+        }
+
+        @media (min-width: $break_xl) {
+            margin-right: 55px;
+        }
     }
 
     &__hamburger {
         flex: 0;
         margin-left: auto;
+
+        @media (min-width: $break_md) {
+            margin-left: 0;
+        }
+
+        @media (min-width: $break_xl) {
+            display: none;
+        }
     }
 
     &__nav {
+        @media (min-width: $break_xl) {
+            margin-right: auto;
+        }
+    }
+
+    &__mob-nav {
         position: fixed;
         top: 96px;
         right: 0;
         bottom: 0;
         left: 0;
+        background-color: #fff;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        padding-top: 30px;
+
+        .header__nav {
+            margin-bottom: 30px;
+        }
+
+        .header__contacts {
+            margin-bottom: 30px;
+            margin-top: auto;
+        }
+
+        .header__soc {
+            margin-bottom: 62px;
+        }
+    }
+
+    &__tab-nav {
+        flex: 0;
+        display: flex;
+        align-items: center;
+        margin-right: 27px;
+
+        @media (min-width: $break_xl) {
+            margin-right: 0;
+            flex: 1;
+        }
+
+        .header__soc {
+            margin-right: 50px;
+        }
     }
 }

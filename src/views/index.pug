@@ -23,6 +23,19 @@ block content
                 +logo({
                     parentClass: 'header__logo'
                 })
+                +e.tab-nav.d-none.d-md-flex
+                    +nav({
+                        parentClass: 'header__nav d-none d-xl-block',
+                        items: nav
+                    })
+                    +soc({
+                        parentClass: 'header__soc',
+                        items: soc
+                    })
+                    +contacts({
+                        parentClass: 'header__contacts',
+                        items: contacts
+                    })
                 +hamburger({class: "header__hamburger"})
                 +e.mob-nav.js-hamburger-activator
                     +nav({
@@ -31,11 +44,11 @@ block content
                     })
                     +contacts({
                         parentClass: 'header__contacts',
-                        items: contacts,
+                        items: contacts
                     })
                     +soc({
-                        parentClass: 'header_soc',
-                        items: soc,
+                        parentClass: 'header__soc',
+                        items: soc
                     })
     +b.MAIN
     +b.FOOTER

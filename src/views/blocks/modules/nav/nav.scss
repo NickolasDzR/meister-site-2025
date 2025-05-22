@@ -1,3 +1,30 @@
 .nav {
     color: red;
+
+    &__list {
+        @media (min-width: $break_xl) {
+            display: flex;
+            align-items: center;
+        }
+    }
+
+    &__item {
+        text-align: center;
+
+        & + & {
+            margin-top: 30px;
+
+            @media (min-width: $break_xl) {
+                margin-top: 0;
+                margin-left: 57px;
+            }
+        }
+    }
+
+    &__link {
+        color: $lightGray;
+        font-size: 16px;
+        line-height: 1.6;
+        text-decoration: none;
+    }
 }

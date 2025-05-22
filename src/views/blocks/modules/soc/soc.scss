@@ -1,3 +1,20 @@
 .soc {
-    fill: $indigo;
+    display: flex;
+    justify-content: center;
+
+    &__list {
+        display: flex;
+    }
+
+    &__item {
+        & + & {
+            margin-left: 35px;
+        }
+    }
+
+    &__svg {
+        fill: $indigo;
+        width: 25px;
+        height: 25px;
+    }
 }

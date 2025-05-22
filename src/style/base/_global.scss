@@ -23,3 +23,8 @@ body {
     }
 }
 
+.disable {
+    opacity: 0;
+    pointer-events: none;
+    transition: all .3s ease;
+}

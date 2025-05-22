@@ -1,6 +1,6 @@
 mixin nav(value = false)
     +b.NAV.nav(class=value.parentClass)
-        +e.list
+        +e.UL.list
             each item in value.items
                 +e.LI.item
                     +e.A.link(href=item['link'])= item['text']
