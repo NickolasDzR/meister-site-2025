@@ -1,0 +1,36 @@
+.main-slider {
+    height: calc(100vh - 100px);
+    overflow-y: hidden;
+
+    @media (min-width: $break_md) {
+        height: calc(100vh - 111px);
+    }
+
+    &__slider {
+        position: relative;
+        height: 100%;
+    }
+
+    &__slider, .splide__track,  {
+        height: 100%;
+    }
+
+    .splide__arrows {
+        position: absolute;
+    }
+
+    &__image {
+        position: relative;
+        object-fit: cover;
+        height: 100%;
+        width: 100%;
+        display: block;
+    }
+
+    .splide__arrows {
+        position: absolute;
+        z-index: 1;
+        left: 15px;
+        bottom: 120px
+    }
+}

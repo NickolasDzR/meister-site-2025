@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@prettier/plugin-pug": "^3.4.0",
+    "@splidejs/splide": "^4.1.4",
     "bootstrap": "^5.3.6",
     "css-loader": "^7.1.2",
     "html-webpack-inline-svg-plugin": "^2.3.0",

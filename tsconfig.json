@@ -1,17 +1,24 @@
 {
     "compilerOptions": {
-        "outDir": "./dist/",
-        "noImplicitAny": true,
-        "module": "es6",
-        "target": "es5",
-        "jsx": "react",
-        "allowJs": true,
+        "lib": ["ES6", "esnext", "dom", "dom.iterable"],
+        "target": "ESNext",
+        "noImplicitAny": false,
         "moduleResolution": "node",
+        "strict": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
         "baseUrl": ".",
         "paths": {
             "@components/*": [
                 "src/views/blocks/components/*"
-            ]
+            ],
+            "@modules/*": [
+                "src/views/blocks/modules/*"
+            ],
+
+            "@splideJs": ["node_modules/@splidejs/splide/dist/js/splide.esm.js"],
+            "@splidecss": ["node_modules/@splidejs/splide/dist/css/splide-core.min.css"]
         }
     }
 }

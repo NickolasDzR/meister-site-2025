@@ -26,41 +26,41 @@ mixin picture(value = false)
                 md = value.md ? value.md : false;
     picture
         if lg
-            source(srcset=`img/content/${value.name}.webp 1x,
-                img/content/${value.name}@x2.webp 2x`
+            source(srcset=`../images/content/${value.name}.webp 1x,
+                ../images/content/${value.name}@2x.webp 2x`
                 media="(min-width: 768px)"
                 type="image/webp"
             )
-            source(srcset=`img/content/${value.name}.${value.format} 1x,
-                img/content/${value.name}@x2.${value.format} 2x`
+            source(srcset=`../images/content/${value.name}.${value.format} 1x,
+                ../images/content/${value.name}@2x.${value.format} 2x`
                 media="(min-width: 768px)"
             )
         if md
-            source(srcset=`img/content/${value.name}-desk.webp 1x,
-                img/content/${value.name}-desk@x2.webp 2x`
+            source(srcset=`../images/content/${value.name}-desk@1x.webp 1x,
+                ../images/content/${value.name}-desk@2x.webp 2x`
                 media="(min-width: 768px)"
                 type="image/webp"
             )
         if sm
-            source(srcset=`img/content/${value.name}-desk.webp 1x,
-                img/content/${value.name}-desk@x2.webp 2x`
+            source(srcset=`../images/content/${value.name}-desk@1x.webp 1x,
+                ../images/content/${value.name}-desk@2x.webp 2x`
                 media="(min-width: 576px)"
                 type="image/webp"
             )
         if value.format
             +e.IMG(class=imgClass class=imgModificator
-                srcset=`img/content/${value.name}@x2.webp 2x,
-                img/content/${value.name}.${value.format},
-                img/content/${value.name}@2.${value.format} x2`
-                src=`img/content/${value.name}.webp`
+                srcset=`../images/content/${value.name}@2x.webp 2x,
+                ../images/content/${value.name}.${value.format},
+                ../images/content/${value.name}@2x.${value.format} x2`
+                src=`../images/content/${value.name}.webp`
                 alt=value.alt
                 data=value.data
                 style=value.style
             )
         else
             +e.IMG(class=imgClass class=imgModificator
-                srcset=`img/content/${value.name}@x2.webp 2x`
-                src=`img/content/${value.name}.webp`
+                srcset=`../images/content/${value.name}@2x.webp 2x`
+                src=`../images/content/${value.name}@1x.webp`
                 alt=value.alt
                 data=value.data
             )

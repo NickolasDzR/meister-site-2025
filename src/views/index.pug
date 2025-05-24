@@ -8,49 +8,69 @@ include blocks/modules/logo/logo
 include blocks/modules/soc/soc
 include blocks/modules/contacts/contacts
 
+include blocks/modules/main-slider/main-slider
+
+include blocks/modules/header/header
+
 block variables
     -
         var
             nav = [{link: '#', text: "Новости"}, {link: '#', text: "Расчитать доставку"}, {link: '#', text: "Контакты"}]
             soc = [{link: '#', name: 'ws'}, {link: '#', name: 'tg'}, {link: '#', name: 'vk'}]
             contacts = [{title: '+7 (999) 120 59 82', titleLink: '#', subtitle: 'nickolasdzr@yandex.ru', subtitleLink: '#'}]
+            slides = [
+                {
+                    images: {
+                        "mobile": "/slider/slide-1",
+                        "tablet": "/slider/slide-1-desk",
+                    },
+                    title: "Обманчивый штиль: как меняются ставки на автоперевозки в середине лета",
+                    subtitle: "Рассказываем, на каких направлениях тарифы в июле изменились сильнее всего",
+                    link: "#",
+                },
+                {
+                    images: {
+                        "mobile": "/slider/slide-2",
+                        "tablet": "/slider/slide-2-desk",
+                    },
+                    title: "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, contur",
+                    subtitle: "fugiat nulla pariatur. Excepteur sint occaecat cupidatat asdasdasdasd",
+                    link: "#",
+                },
+                {
+                    images: {
+                        "mobile": "/slider/slide-2",
+                        "tablet": "/slider/slide-2-desk",
+                    },
+                    title: "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, contur",
+                    subtitle: "fugiat nulla pariatur. Excepteur sint occaecat cupidatat asdasdasdasd",
+                    link: "#",
+                },
+                {
+                    images: {
+                        "mobile": "/slider/slide-2",
+                        "tablet": "/slider/slide-2-desk",
+                    },
+                    title: "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, contur",
+                    subtitle: "fugiat nulla pariatur. Excepteur sint occaecat cupidatat asdasdasdasd",
+                    link: "#",
+                },
+                {
+                    images: {
+                        "mobile": "/slider/slide-2",
+                        "tablet": "/slider/slide-2-desk",
+                    },
+                    title: "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, contur",
+                    subtitle: "fugiat nulla pariatur. Excepteur sint occaecat cupidatat asdasdasdasd",
+                    link: "#",
+                },
+            ]
 
 block content
     include ../../node_modules/bemto.pug/bemto.pug
-    +b.HEADER.header
-        .container
-            .row
-                +logo({
-                    parentClass: 'header__logo'
-                })
-                +e.tab-nav.d-none.d-md-flex
-                    +nav({
-                        parentClass: 'header__nav d-none d-xl-block',
-                        items: nav
-                    })
-                    +soc({
-                        parentClass: 'header__soc',
-                        items: soc
-                    })
-                    +contacts({
-                        parentClass: 'header__contacts',
-                        items: contacts
-                    })
-                +hamburger({class: "header__hamburger"})
-                +e.mob-nav.js-hamburger-activator
-                    +nav({
-                        parentClass: 'header__nav',
-                        items: nav
-                    })
-                    +contacts({
-                        parentClass: 'header__contacts',
-                        items: contacts
-                    })
-                    +soc({
-                        parentClass: 'header__soc',
-                        items: soc
-                    })
+    +header()
     +b.MAIN
+        +mainSlider({items: slides})
     +b.FOOTER
 
 block scripts

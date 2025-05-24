@@ -1,0 +1,34 @@
+mixin header(value = false)
+    +b.HEADER.header
+        .container
+            .row
+                +logo({
+                    parentClass: 'header__logo'
+                })
+                +e.tab-nav.d-none.d-md-flex
+                    +nav({
+                        parentClass: 'header__nav d-none d-xl-block',
+                        items: nav
+                    })
+                    +soc({
+                        parentClass: 'header__soc',
+                        items: soc
+                    })
+                    +contacts({
+                        parentClass: 'header__contacts',
+                        items: contacts
+                    })
+                +hamburger({class: "header__hamburger"})
+                +e.mob-nav.js-hamburger-activator
+                    +nav({
+                        parentClass: 'header__nav',
+                        items: nav
+                    })
+                    +contacts({
+                        parentClass: 'header__contacts',
+                        items: contacts
+                    })
+                    +soc({
+                        parentClass: 'header__soc',
+                        items: soc
+                    })

@@ -1,0 +1,14 @@
+mixin mainSlider(value = false)
+    +b.main-slider
+        if value.items
+            +e.slider.splide(aria-labelledby="Слайдер со статьями")
+                .splide__track
+                    +e.UL.list.splide__list
+                        each item in value.items
+                            +e.LI.slide.splide__slide
+                                +picture({
+                                    name: item["images"]["mobile"],
+                                    md: true,
+                                    class: "image"
+                                })
+        else

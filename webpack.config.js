@@ -74,6 +74,11 @@ module.exports = {
             {
                 test: /\.(png|svg|jpg|jpeg|gif|webp)$/i,
                 type: 'asset/resource',
+                // Убрать, чтобы файлы назывались хэшем
+                generator: {
+                    // keep original filenames and copy images to `dist/img/`
+                    filename: 'img/[name].[hash].[ext]',
+                },
             },
         ],
     },
@@ -83,6 +88,10 @@ module.exports = {
         alias: {
             "~": path.resolve(__dirname, 'node_modules/'),
             "@components": path.resolve(__dirname, 'src/views/blocks/components/'),
+            "@modules": path.resolve(__dirname, 'src/views/blocks/modules/'),
+
+            '@splideJs': path.resolve(__dirname, 'node_modules/@splidejs/splide/dist/js/splide.esm.js'),
+            '@splidecss': path.resolve(__dirname, 'node_modules/@splidejs/splide/dist/css/splide-core.min.css'),
         }
     },
 
