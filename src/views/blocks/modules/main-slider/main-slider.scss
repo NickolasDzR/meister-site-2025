@@ -30,7 +30,81 @@
     .splide__arrows {
         position: absolute;
         z-index: 1;
-        left: 15px;
+        left: 17px;
         bottom: 120px
+    }
+
+    &__arrows {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    &__arrow {
+        width: 55px;
+        height: 55px;
+        padding: 0;
+        margin: 0;
+        border: none;
+        outline: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        background-color: transparent;
+
+        &::before {
+            content: "";
+            width: 100%;
+            height: 100%;
+            display: block;
+            position: absolute;
+            border-radius: 9999px;
+            background-color: white;
+            opacity: .6;
+        }
+
+        svg:not(.main-slider__progress) {
+            fill: none;
+            width: 12px;
+            height: 20px;
+            opacity: 0.6;
+        }
+
+        path {
+            stroke: #4B4B4B;
+            stroke-width: 2;
+            stroke-linecap: round;
+        }
+    }
+
+    &__arrow-prev {
+        margin-right: 122px;
+    }
+
+    &__slide-count {
+        color: $white;
+        opacity: .8;
+        display: flex;
+        align-items: center;
+        position: absolute;
+    }
+
+    &__progress {
+        transform: rotate(-90deg);
+        width: 66px;
+        height: 66px;
+        background-color: transparent;
+        position: absolute;
+        border-radius: 50%;
+        fill: transparent;
+    }
+
+    &__progress-bar {
+        stroke: white;
+        stroke-width: 8px;
+        stroke-dasharray: 314;
+        stroke-dashoffset: 0;
+        transition: all .3s ease;
     }
 }
