@@ -13,7 +13,7 @@ if (mainSlider) {
 
         const sliderSettings = {
             type: 'loop',
-            autoplay: true,
+            // autoplay: true,
             speed: 600,
 
         } as Options;
@@ -21,19 +21,19 @@ if (mainSlider) {
         if (mainSliderSplide) {
             const splideSlider = new Splide(mainSliderSplide, sliderSettings);
 
+            const progressCircle = mainSlider.querySelector(".main-slider__progress-bar") as SVGAElement;
+            const dashoffset = 314;
+
             if (slideCounter) {
                 splideSlider.on("move", (newIndex) => {
                     slideCounter.textContent = `${ newIndex + 1 } / ${ sliderLength.length }`;
+                    // progressCircle.style.strokeDashoffset = `-${dashoffset}`;
                 });
             }
 
-            const progressCircle = mainSlider.querySelector(".main-slider__progress-bar") as SVGAElement;
-
             if (progressCircle) {
-                const dashoffset = 314;
 
                 splideSlider.on("autoplay:playing", (rate) => {
-                    console.log(`-${rate * 314}`)
                     progressCircle.style.strokeDashoffset = `-${rate * dashoffset}`;
                 })
             }

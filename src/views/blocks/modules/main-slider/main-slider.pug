@@ -7,6 +7,7 @@ mixin mainSlider(value = false)
                         +e.SVG.svg-arrow(viewBox="0 0 12 20" width="12" height="20")
                             +e.PATH.svg-arrow-path(d="M11.0283 1.20798L2.39014 9.84619L11.0283 18.4844")
                     +e.slide-count= "1 / " + value["items"].length
+                    // Нужно сделать анимацию заполнения кнопки нормально
                     +e.BUTTON.arrow.main-slider__arrow-next.splide__arrow.splide__arrow--next
                         +e.SVG.svg-arrow(viewBox="0 0 12 20" width="12" height="20")
                             +e.PATH.svg-arrow-path(d="M1.39011 1.26797L10.0283 9.90619L1.39011 18.5444")
@@ -16,6 +17,10 @@ mixin mainSlider(value = false)
                     +e.UL.list.splide__list
                         each item in value.items
                             +e.LI.slide.splide__slide
+                                +e.content
+                                    +e.title= item['title']
+                                    +e.subtitle= item['subtitle']
+                                    +e.A.article-link.button.button_transparent(href='#') Подробнее
                                 +picture({
                                     name: item["images"]["mobile"],
                                     md: true,
