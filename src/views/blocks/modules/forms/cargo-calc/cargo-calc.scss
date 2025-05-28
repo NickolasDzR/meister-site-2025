@@ -1,0 +1,27 @@
+.cargo-calc {
+    position: fixed;
+    top: 99px;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    backdrop-filter: blur(8px);
+    background: rgba(31, 66, 93, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2;
+    transform: translateX(-100vh);
+    transition: transform 0.5s ease;
+
+    &__title {
+        font-size: 36px;
+        color: $white;
+        line-height: 1.43;
+        text-transform: uppercase;
+        margin-bottom: 35px;
+    }
+
+    &__button {
+
+    }
+}

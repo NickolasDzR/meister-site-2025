@@ -1,0 +1,6 @@
+mixin button(value = false)
+    -
+        var
+            mod = value.type ? 'button_' + value.type : ''
+            el = value.class ? value.class : ''
+    +b.BUTTON(class=mod + ' ' + el)= value.text

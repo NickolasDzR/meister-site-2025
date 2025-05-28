@@ -2,6 +2,7 @@ extends layouts/default
 
 include blocks/components/graphic/graphic
 include blocks/components/hamburger/hamburger
+include blocks/components/button/button
 
 include blocks/modules/nav/nav
 include blocks/modules/logo/logo
@@ -9,6 +10,8 @@ include blocks/modules/soc/soc
 include blocks/modules/contacts/contacts
 
 include blocks/modules/main-slider/main-slider
+include blocks/modules/forms/cargo-calc/cargo-calc
+include blocks/components/input/input
 
 include blocks/modules/header/header
 
@@ -71,7 +74,15 @@ block content
     +header()
     +b.MAIN
         +mainSlider({items: slides})
-    +b.FOOTER
+        +cargoCalc({
+            title: 'Отправить груз',
+            button: 'Расчитать доставку'
+        })
+    +button({
+        type: 'keppel',
+        class: 'main__cargo-calc-button',
+        text: 'Рассчитать доставку',
+    })
 
 block scripts
     script(src='../ts/main.ts')

@@ -15,6 +15,7 @@ if (mainSlider) {
             type: 'loop',
             // autoplay: true,
             speed: 600,
+            pagination: false,
 
         } as Options;
 

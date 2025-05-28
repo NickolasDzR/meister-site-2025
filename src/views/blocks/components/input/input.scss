@@ -1,0 +1,30 @@
+.input {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    &__placeholder {
+        padding: 19px 51px 15px;
+        border-radius: 5px;
+        border: none;
+        outline: none;
+        font-size: 16px;
+        line-height: 1.6;
+        color: $black;
+
+        &::placeholder {
+            font-size: 16px;
+            line-height: 1.6;
+            color: $gray;
+        }
+    }
+    
+    &__icon {
+        position: absolute;
+        left: 20px;
+        width: 24px;
+        height: 24px;
+        fill: $gray;
+    }
+}

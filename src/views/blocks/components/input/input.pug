@@ -1,0 +1,8 @@
+mixin input(value = false)
+    +b.input
+        if value.icon
+            +icon({
+                name: value.icon,
+                class: value.class ? 'input__icon ' + value.class : 'input__icon'
+            })
+        +e.INPUT.placeholder(placeholder=value['placeholder'])

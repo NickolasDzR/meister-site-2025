@@ -1,0 +1,9 @@
+mixin cargoCalc(value = false)
+    +b.cargo-calc
+        +e.FORM.form
+            +e.P.title= value['title']
+            +input({
+                placeholder: 'Тоннаж',
+                icon: 'weight',
+                class: 'cargo-calc__placeholder-icon'
+            })
