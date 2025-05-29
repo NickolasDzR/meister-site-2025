@@ -1,8 +1,8 @@
 mixin input(value = false)
-    +b.input
+    +b.input(class=value.class)
         if value.icon
             +icon({
                 name: value.icon,
-                class: value.class ? 'input__icon ' + value.class : 'input__icon'
+                class: value.iconClass ? 'input__icon ' + value.iconClass : 'input__icon'
             })
-        +e.INPUT.placeholder(placeholder=value['placeholder'])
+        +e.INPUT.placeholder(class=value['placeholderClass'] placeholder=value['placeholder'])

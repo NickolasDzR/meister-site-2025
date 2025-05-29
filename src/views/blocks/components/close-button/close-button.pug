@@ -1,0 +1,5 @@
+mixin closeButton(value = false)
+    - var mod = value["class"] ? value["class"] + " close-button is-active" : "close-button is-active"
+    +hamburger({
+        class: mod
+    })

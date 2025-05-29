@@ -3,7 +3,7 @@
     overflow-y: hidden;
 
     @media (min-width: $break_md) {
-        height: calc(100vh - 163px);
+        height: calc(100vh - 110px);
     }
 
     &__slider {
@@ -40,7 +40,11 @@
         position: absolute;
         z-index: 1;
         left: 17px;
-        bottom: 60px
+        bottom: 20px;
+
+        @media (min-width: 320px) and (height > 760px) {
+            bottom: 60px;
+        }
     }
 
     &__arrow {

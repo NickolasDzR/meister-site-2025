@@ -10,8 +10,25 @@
     justify-content: center;
     align-items: center;
     z-index: 2;
-    transform: translateX(-100vh);
+    transform: translateX(-100vw);
     transition: transform 0.5s ease;
+    padding: 15px;
+
+    @media (min-width: $break_md) {
+        top: 110px;
+    }
+
+    @media (min-width: $break_xl) {
+        top: 110px;
+        transform: none;
+        left: auto;
+        padding-right: 164px;
+        padding-left: 164px;
+    }
+
+    &.active {
+        transform: translateX(0);
+    }
 
     &__title {
         font-size: 36px;
@@ -22,6 +39,37 @@
     }
 
     &__button {
+        border-radius: 5px;
+        width: 100%;
+    }
 
+    &__close-button {
+        position: absolute;
+        top: 25px;
+        right: 10px;
+
+        @media (min-width: $break_xl) {
+            display: none;
+        }
+    }
+
+    .hamburger.is-active .hamburger-inner, .hamburger.is-active .hamburger-inner::before, .hamburger.is-active .hamburger-inner::after {
+        background-color: $white;
+    }
+
+    &__input, &__placeholder {
+        width: 100%;
+    }
+
+    &__content {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+
+        > * + * {
+            margin-top: 35px;
+        }
     }
 }

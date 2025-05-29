@@ -1,9 +1,20 @@
 mixin cargoCalc(value = false)
     +b.cargo-calc
+        +closeButton({
+            class: 'cargo-calc__close-button'
+        })
         +e.FORM.form
             +e.P.title= value['title']
-            +input({
-                placeholder: 'Тоннаж',
-                icon: 'weight',
-                class: 'cargo-calc__placeholder-icon'
-            })
+            +e.content
+                +input({
+                    placeholder: 'Тоннаж',
+                    class: 'cargo-calc__input',
+                    placeholderClass: 'cargo-calc__placeholder',
+                    icon: 'weight',
+                    iconClass: 'cargo-calc__placeholder-icon'
+                })
+                +button({
+                    type: 'keppel',
+                    class: 'cargo-calc__button',
+                    text: 'Рассчитать доставку',
+                })

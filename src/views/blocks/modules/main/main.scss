@@ -1,5 +1,20 @@
 .main {
     &__cargo-calc-button {
         width: 100%;
+
+        @media (min-width: $break_md) {
+            position: fixed;
+            right: -152px;
+            left: auto;
+            transform: TranslateX(-50%) rotate(-90deg);
+            width: auto;
+            top: 50%;
+            bottom: 50%;
+            height: 52px;
+        }
+
+        @media (min-width: $break_xl) {
+            display: none;
+        }
     }
 }
