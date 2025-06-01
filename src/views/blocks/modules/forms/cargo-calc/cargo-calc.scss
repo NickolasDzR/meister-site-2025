@@ -59,6 +59,12 @@
 
     &__input, &__placeholder {
         width: 100%;
+
+        &:hover {
+            .input__icon {
+                fill: $keppel;
+            }
+        }
     }
 
     &__content {

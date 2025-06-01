@@ -89,9 +89,12 @@ module.exports = {
             "~": path.resolve(__dirname, 'node_modules/'),
             "@components": path.resolve(__dirname, 'src/views/blocks/components/'),
             "@modules": path.resolve(__dirname, 'src/views/blocks/modules/'),
+            "@classWatcher": path.resolve(__dirname, 'src/ts/modules/classWatcher.ts'),
 
             '@splideJs': path.resolve(__dirname, 'node_modules/@splidejs/splide/dist/js/splide.esm.js'),
             '@splidecss': path.resolve(__dirname, 'node_modules/@splidejs/splide/dist/css/splide-core.min.css'),
+
+            '@nice-select2-scss': path.resolve(__dirname, 'node_modules/nice-select2/src/scss/nice-select2.scss')
         }
     },
 

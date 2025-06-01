@@ -18,7 +18,12 @@
             ],
 
             "@splideJs": ["node_modules/@splidejs/splide/dist/js/splide.esm.js"],
-            "@splidecss": ["node_modules/@splidejs/splide/dist/css/splide-core.min.css"]
+            "@splidecss": ["node_modules/@splidejs/splide/dist/css/splide-core.min.css"],
+
+
+            "@classWatcher": ["src/ts/modules/classWatcher"],
+
+            "@nice-select2-scss": ["node_modules/nice-select2/src/scss/nice-select2.scss"]
         }
     }
 }

@@ -3,6 +3,16 @@
     display: flex;
     justify-content: center;
     align-items: center;
+
+    &:hover {
+        .input__icon {
+            fill: $keppel;
+        }
+
+        .nice-select:after {
+            border-color: $keppel;
+        }
+    }
     
     &__placeholder {
         padding: 19px 51px 15px;
@@ -18,6 +28,11 @@
             line-height: 1.6;
             color: $gray;
         }
+
+        &_select {
+            height: auto;
+            width: 100%;
+        }
     }
     
     &__icon {
@@ -26,5 +41,15 @@
         width: 24px;
         height: 24px;
         fill: $gray;
+        transition: all .3s ease;
+        z-index: 1;
     }
+}
+
+.nice-select:after {
+    right: 23px;
+}
+
+.nice-select-dropdown {
+    width: 100%;
 }

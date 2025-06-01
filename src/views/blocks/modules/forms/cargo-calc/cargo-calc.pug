@@ -6,6 +6,11 @@ mixin cargoCalc(value = false)
         +e.FORM.form
             +e.P.title= value['title']
             +e.content
+                +select({
+                    options: ['Выберете город'],
+                    parentClass: 'cargo-calc__input',
+                    icon: 'location',
+                })
                 +input({
                     placeholder: 'Тоннаж',
                     class: 'cargo-calc__input',
