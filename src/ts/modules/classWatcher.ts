@@ -1,9 +1,11 @@
+import {capitalizeFirstLetter} from "@utils";
+
 export class ClassWatcher {
     eventType: string;
     targetNode: HTMLElement;
     classToWatch: "string";
     classAddedCallback: Function;
-    classRemovedCallback: Function;
+    classRemovedCallback?: Function | null;
     observer: null | MutationObserver;
     lastClassState: boolean | null;
     observerSettings: {
@@ -14,12 +16,12 @@ export class ClassWatcher {
     }
 
 
-    constructor(eventType, targetNode, classToWatch, classAddedCallback, classRemovedCallback) {
+    constructor(eventType, targetNode, classToWatch, classAddedCallback, classRemovedCallback = null) {
         this.eventType = eventType;
         this.targetNode = targetNode
         this.classToWatch = classToWatch
         this.classAddedCallback = classAddedCallback
-        this.classRemovedCallback = classRemovedCallback
+        this.classRemovedCallback = classRemovedCallback ? classRemovedCallback : null
         this.observer = null
         this.lastClassState = targetNode.classList.contains(this.classToWatch);
         this.observerSettings = {
@@ -36,13 +38,14 @@ export class ClassWatcher {
     }
 
     init() {
-        this.observer = new MutationObserver(this['mutationCallback' + this.eventType])
+        this.observer = new MutationObserver(this['mutationCallback' + capitalizeFirstLetter(this.eventType)].bind(this))
         this.observe()
     }
 
     observe() {
-        if (this.observer)
-        this.observer.observe(this.targetNode, { attributes: true })
+        if (this.observer) {
+            this.observer.observe(this.targetNode, this.observerSettings)
+        }
     }
 
     disconnect() {
@@ -50,9 +53,9 @@ export class ClassWatcher {
         this.observer.disconnect()
     }
 
-    mutationCallbackClassTag(mutationsList) {
+    mutationCallbackTag(mutationsList) {
         if (this.targetNode.querySelector(".nice-select")) {
-            console.log("It's in the DOM!");
+            this.classAddedCallback()
             this.disconnect()
         }
     }
@@ -67,7 +70,9 @@ export class ClassWatcher {
                         this.classAddedCallback()
                     }
                     else {
-                        this.classRemovedCallback()
+                        if (this.classRemovedCallback) {
+                            this.classRemovedCallback()
+                        }
                     }
                 }
             }

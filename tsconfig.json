@@ -17,6 +17,10 @@
                 "src/views/blocks/modules/*"
             ],
 
+            "@utils": [
+                "src/ts/helpers/utils.ts"
+            ],
+
             "@splideJs": ["node_modules/@splidejs/splide/dist/js/splide.esm.js"],
             "@splidecss": ["node_modules/@splidejs/splide/dist/css/splide-core.min.css"],
 

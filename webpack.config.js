@@ -89,6 +89,7 @@ module.exports = {
             "~": path.resolve(__dirname, 'node_modules/'),
             "@components": path.resolve(__dirname, 'src/views/blocks/components/'),
             "@modules": path.resolve(__dirname, 'src/views/blocks/modules/'),
+            "@utils": path.resolve(__dirname, 'src/ts/helpers/utils'),
             "@classWatcher": path.resolve(__dirname, 'src/ts/modules/classWatcher.ts'),
 
             '@splideJs': path.resolve(__dirname, 'node_modules/@splidejs/splide/dist/js/splide.esm.js'),
