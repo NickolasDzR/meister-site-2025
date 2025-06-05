@@ -84,18 +84,21 @@ module.exports = {
     },
 
     resolve: {
-        extensions: ['.ts', '.js'],
+        extensions: ['.ts', '.js', '.json'],
         alias: {
             "~": path.resolve(__dirname, 'node_modules/'),
             "@components": path.resolve(__dirname, 'src/views/blocks/components/'),
             "@modules": path.resolve(__dirname, 'src/views/blocks/modules/'),
             "@utils": path.resolve(__dirname, 'src/ts/helpers/utils'),
+            "@types": path.resolve(__dirname, 'src/ts/helpers/types'),
             "@classWatcher": path.resolve(__dirname, 'src/ts/modules/classWatcher.ts'),
 
             '@splideJs': path.resolve(__dirname, 'node_modules/@splidejs/splide/dist/js/splide.esm.js'),
             '@splidecss': path.resolve(__dirname, 'node_modules/@splidejs/splide/dist/css/splide-core.min.css'),
 
-            '@nice-select2-scss': path.resolve(__dirname, 'node_modules/nice-select2/src/scss/nice-select2.scss')
+            '@nice-select2-scss': path.resolve(__dirname, 'node_modules/nice-select2/src/scss/nice-select2.scss'),
+
+            "@dadatajson": path.resolve(__dirname, 'json/dadata.json'),
         }
     },
 
@@ -105,7 +108,7 @@ module.exports = {
         static: './dist',
         watchFiles: {
             paths: ['src/**/*.*',],
-        }
+        },
     },
 
     optimization: {

@@ -1,45 +1,83 @@
 import NiceSelect from "nice-select2";
 import {ClassWatcher} from "@classWatcher";
-import {logger} from "@prettier/plugin-pug";
+import dadata from "@dadatajson";
+import {DadataJson, niceSelect2Instance} from "@types";
 
 const selects = document.querySelectorAll(".input__placeholder_select") as NodeListOf<HTMLSelectElement>;
-const url = "https://cleaner.dadata.ru/api/v2/clean/address";
+const url = "../../json/dadata.json";
 const token = "3f637eb956c800c700b18d79bb1fb687cdcb2b94";
 const secret = "28deeea55b3c9720d891d81b5c7797b94026d4d3";
 
 var dadataOptions = {
     method: "POST",
-    mode: "cors",
     headers: {
         "Content-Type": "application/json",
-        "Authorization": "Token " + token,
-        "X-Secret": secret
     },
-    body: JSON.stringify(['Мос'])
 }
 
-    const onAddNewTag = async() => {
-    console.log("asdsads")
-    // @ts-ignore
-    const res = await fetch(url, dadataOptions)
+const niceSelectInstance:Array<niceSelect2Instance> | any[] = [];
 
-    const json = await res.json();
+const onChangedInput = (event: Event) => {
+    const input = event.target as HTMLInputElement;
+    const value = input.value;
 
-        console.log(json)
+    // TODO должен быть фетч с поиском по результатам в value, который нужно будет сделать настоящий
+    // TODO Еще придумать regex, который будет выделять строку из value с результатом, который придёт от dadata
+
+    const results = Array.from(dadata as Array<DadataJson>, address => address.result);
+
+    const parentInputBlock = input.closest(".input") as HTMLDivElement;
+    const select = parentInputBlock.querySelector("select") as HTMLSelectElement;
+    const selectIndex = select.dataset['index']
+
+    if (dadata.length > 0) {
+        const options = select.querySelectorAll("option");
+
+        options.forEach(option => option.remove());
+
+        Array.from(results, (result, i) => {
+            const option = document.createElement("option") as HTMLOptionElement;
+
+            option.value = `${i}`;
+            option.innerText = result;
+
+            select.insertAdjacentElement("beforeend", option);
+
+            if (niceSelectInstance) {
+                niceSelectInstance[`${selectIndex}`].update();
+            }
+        })
+    }
+}
+
+
+const onAddNewTag = (elem: HTMLElement) => {
+    const currentSelect = elem as HTMLSelectElement;
+    const dropdown = currentSelect.nextElementSibling as HTMLDivElement;
+    const input = dropdown.querySelector(".nice-select-search") as HTMLInputElement;
+
+    input.addEventListener("input", onChangedInput)
+
 }
 
 const newSelectSettings = {
     searchable: true,
-    placeholder: 'Выберите город'
 }
 
 if (selects.length > 0) {
-    Array.from(selects, (select) => {
+    Array.from(selects, (select, i) => {
         const currentInput = select.closest(".input") as HTMLDivElement;
-        new ClassWatcher('tag', currentInput, 'open', onAddNewTag)
+        const dataSelectPlaceholder = currentInput.querySelector("option[data-select]") as HTMLOptionElement;
 
-        new NiceSelect(document.querySelector(".input__placeholder_select") as HTMLSelectElement, newSelectSettings);
+        (currentInput.querySelector("select") as HTMLSelectElement).dataset['index'] = `${i}`
+
+        dataSelectPlaceholder ? newSelectSettings['placeholder'] = dataSelectPlaceholder.dataset.select : 'Выберите';
+
+        new ClassWatcher('tag', currentInput, 'open', onAddNewTag.bind(this, select))
+
+        const niceSelectCurrentInstance = new NiceSelect(select as HTMLSelectElement, newSelectSettings) as niceSelect2Instance;
 
 
+        niceSelectInstance.push(niceSelectCurrentInstance);
     })
 }

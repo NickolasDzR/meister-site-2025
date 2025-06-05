@@ -7,7 +7,12 @@ mixin cargoCalc(value = false)
             +e.P.title= value['title']
             +e.content
                 +select({
-                    options: ['Выберете город'],
+                    options: ['Выберете место загрузки'],
+                    parentClass: 'cargo-calc__input',
+                    icon: 'location',
+                })
+                +select({
+                    options: ['Выберете место выгрузки'],
                     parentClass: 'cargo-calc__input',
                     icon: 'location',
                 })

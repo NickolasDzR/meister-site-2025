@@ -7,19 +7,14 @@
         "strict": true,
         "esModuleInterop": true,
         "skipLibCheck": true,
+        "resolveJsonModule": true,
         "forceConsistentCasingInFileNames": true,
         "baseUrl": ".",
         "paths": {
-            "@components/*": [
-                "src/views/blocks/components/*"
-            ],
-            "@modules/*": [
-                "src/views/blocks/modules/*"
-            ],
-
-            "@utils": [
-                "src/ts/helpers/utils.ts"
-            ],
+            "@components/*": ["src/views/blocks/components/*"],
+            "@modules/*": ["src/views/blocks/modules/*"],
+            "@utils": ["src/ts/helpers/utils.ts"],
+            "@types": ["src/ts/helpers/types.ts"],
 
             "@splideJs": ["node_modules/@splidejs/splide/dist/js/splide.esm.js"],
             "@splidecss": ["node_modules/@splidejs/splide/dist/css/splide-core.min.css"],
@@ -27,7 +22,10 @@
 
             "@classWatcher": ["src/ts/modules/classWatcher"],
 
-            "@nice-select2-scss": ["node_modules/nice-select2/src/scss/nice-select2.scss"]
-        }
+            "@nice-select2-scss": ["node_modules/nice-select2/src/scss/nice-select2.scss"],
+
+            "@dadatajson": ["json/dadata.json"],
+        },
+        "typeRoots": ["./src/ts/helpers/types.ts"]
     }
 }

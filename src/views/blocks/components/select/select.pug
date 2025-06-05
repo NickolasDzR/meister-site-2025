@@ -7,4 +7,4 @@ mixin select(value = false)
             })
         +e.SELECT.placeholder.input__placeholder_select
             each option, index in value['options']
-                +e.option(value=index)= option
+                +e.option(value=index data-select=option)
