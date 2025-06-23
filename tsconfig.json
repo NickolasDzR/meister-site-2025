@@ -23,6 +23,7 @@
             "@classWatcher": ["src/ts/modules/classWatcher"],
 
             "@nice-select2-scss": ["node_modules/nice-select2/src/scss/nice-select2.scss"],
+            "@nice-select2": ["src/ts/modules/nice-select2.js"],
 
             "@dadatajson": ["json/dadata.json"],
         },

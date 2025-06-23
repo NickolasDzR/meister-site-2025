@@ -1,4 +1,4 @@
-import NiceSelect from "nice-select2";
+import NiceSelect from "@nice-select2";
 import {ClassWatcher} from "@classWatcher";
 import dadata from "@dadatajson";
 import {DadataJson, niceSelect2Instance} from "@types";
@@ -80,4 +80,35 @@ if (selects.length > 0) {
 
         niceSelectInstance.push(niceSelectCurrentInstance);
     })
+}
+
+
+
+
+// @ts-ignore
+ymaps.ready(init);
+
+function init() {
+    // @ts-ignore
+    var multiRoute = new ymaps.multiRouter.MultiRoute({
+        referencePoints: [
+            [56.250567, 43.478801], // Точка А (например, координаты Красной площади)
+            [56.781984, 44.256649]  // Точка Б (например, координаты Парка Горького)
+        ],
+        params: {
+            results: 1 // Запрашиваем только один маршрут
+        }
+    }, {
+        boundsAutoApply: true // Автоматически подстраивать карту под маршрут
+    });
+
+    multiRoute.model.events.add('requestsuccess', function () {
+        var activeRoute = multiRoute.getActiveRoute();
+        if (activeRoute) {
+            var distance = activeRoute.properties.get("distance");
+            // distance будет в метрах, переводим в километры
+            var distanceKm = distance.value / 1000;
+            console.log("Расстояние между точками: " + distanceKm + " км");
+        }
+    });
 }

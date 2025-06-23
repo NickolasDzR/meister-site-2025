@@ -97,6 +97,7 @@ module.exports = {
             '@splidecss': path.resolve(__dirname, 'node_modules/@splidejs/splide/dist/css/splide-core.min.css'),
 
             '@nice-select2-scss': path.resolve(__dirname, 'node_modules/nice-select2/src/scss/nice-select2.scss'),
+            '@nice-select2': path.resolve(__dirname, 'src/ts/modules/nice-select2.js'),
 
             "@dadatajson": path.resolve(__dirname, 'json/dadata.json'),
         }
