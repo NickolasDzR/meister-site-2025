@@ -6,3 +6,4 @@ mixin input(value = false)
                 class: value.iconClass ? 'input__icon ' + value.iconClass : 'input__icon'
             })
         +e.INPUT.placeholder(class=value['placeholderClass'] placeholder=value['placeholder'])
+        +e.LABEL.label(data-title=value['placeholder'])

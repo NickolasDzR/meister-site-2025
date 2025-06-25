@@ -77,7 +77,6 @@ if (selects.length > 0) {
 
         const niceSelectCurrentInstance = new NiceSelect(select as HTMLSelectElement, newSelectSettings) as niceSelect2Instance;
 
-
         niceSelectInstance.push(niceSelectCurrentInstance);
     })
 }

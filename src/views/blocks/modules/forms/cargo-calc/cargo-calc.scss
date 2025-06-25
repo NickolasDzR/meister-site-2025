@@ -1,6 +1,6 @@
 .cargo-calc {
     position: fixed;
-    top: 99px;
+    top: 0;
     right: 0;
     bottom: 0;
     left: 0;
@@ -14,16 +14,12 @@
     transition: transform 0.5s ease;
     padding: 15px;
 
-    @media (min-width: $break_md) {
-        top: 110px;
-    }
-
     @media (min-width: $break_xl) {
         top: 111px;
         transform: none;
         left: auto;
-        padding-right: 164px;
-        padding-left: 164px;
+        padding-right: 144px;
+        padding-left: 144px;
     }
 
     &.active {
@@ -31,14 +27,20 @@
     }
 
     &__title {
-        font-size: 36px;
+        font-size: 20px;
         color: $white;
         line-height: 1.43;
         text-transform: uppercase;
         margin-bottom: 35px;
+        text-align: center;
+
+        @media (min-width: $break_md) {
+            font-size: 36px;
+        }
     }
 
     &__button {
+        font-size: 16px;
         border-radius: 5px;
         width: 100%;
     }
@@ -75,7 +77,20 @@
         flex-direction: column;
 
         > * + * {
-            margin-top: 35px;
+            margin-top: 20px;
+
+            @media (min-width: $break_md) {
+                margin-top: 35px;
+            }
+        }
+    }
+
+    &__form {
+        max-width: 100%;
+        width: 100%;
+
+        @media (min-width: $break_xl) {
+            max-width: 314px;
         }
     }
 }

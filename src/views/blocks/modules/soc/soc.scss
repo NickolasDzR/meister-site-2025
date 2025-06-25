@@ -12,9 +12,28 @@
         }
     }
 
+    &__link {
+        &:hover {
+            .soc__svg {
+                &_vk {
+                    fill: $vk;
+                }
+
+                &_tg {
+                    fill: $telegram;
+                }
+
+                &_ws {
+                    fill: $whatsapp;
+                }
+            }
+        }
+    }
+
     &__svg {
         fill: $indigo;
         width: 25px;
         height: 25px;
+        transition: all .3s ease;
     }
 }

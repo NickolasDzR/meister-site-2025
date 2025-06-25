@@ -6,5 +6,5 @@ mixin soc(value = false)
                     +e.A.link(href=item['link'])
                         +icon({
                             name: item['name'],
-                            class: value.svgClass ? 'soc__svg ' + value.svgClass : 'soc__svg'
+                            class: value.svgClass ? 'soc__svg ' + value.svgClass + ' soc__svg_' + item['name'] : 'soc__svg soc__svg_' + item['name']
                         })

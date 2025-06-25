@@ -66,6 +66,11 @@
         margin-right: 27px;
 
         @media (min-width: $break_xl) {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        @media (min-width: $break_xl) {
             margin-right: 0;
             flex: 1;
         }

@@ -17,12 +17,14 @@ mixin mainSlider(value = false)
                     +e.UL.list.splide__list
                         each item in value.items
                             +e.LI.slide.splide__slide
-                                +e.content
-                                    +e.title= item['title']
-                                    +e.subtitle= item['subtitle']
-                                    +e.A.article-link.button.button_transparent(href='#') Подробнее
-                                +picture({
-                                    name: item["images"]["mobile"],
-                                    md: true,
-                                    class: "image"
-                                })
+                                +e.slide-container.container
+                                    +e.row.row
+                                        +e.content.col-12
+                                            +e.title= item['title']
+                                            +e.subtitle= item['subtitle']
+                                            +e.A.article-link.button.button_transparent(href='#') Подробнее
+                                        +picture({
+                                            name: item["images"]["mobile"],
+                                            md: true,
+                                            class: "image"
+                                        })

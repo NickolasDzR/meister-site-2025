@@ -1,9 +1,9 @@
 .main-slider {
-    height: calc(100vh - 152px);
+    height: calc(100vh - 151px);
     overflow-y: hidden;
 
     @media (min-width: $break_md) {
-        height: calc(100vh - 110px);
+        height: calc(100vh - 111px);
     }
 
     &__slider {
@@ -18,6 +18,31 @@
     &__slide {
         display: flex;
         align-items: center;
+    }
+
+    &__slide-container {
+        margin-left: 0;
+        margin-right: 0;
+
+        @media (min-width: $break_xxl) {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            height: 100%;
+            width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    }
+
+    &__row {
+        @media (min-width: $break_xxl) {
+            width: 100%;
+            height: 100%;
+            align-items: center;
+            justify-content: flex-start;
+            flex-wrap: nowrap;
+        }
     }
 
     .splide__arrows {
@@ -44,6 +69,10 @@
 
         @media (min-width: 320px) and (height > 760px) {
             bottom: 60px;
+        }
+
+        @media (min-width: $break_xxl) {
+            left: calc((100vw - 1560px + 15px) / 2);
         }
     }
 
@@ -124,8 +153,6 @@
 
     &__content {
         max-width: 500px;
-        position: absolute;
-        left: 15px;
         z-index: 1;
     }
 

@@ -9,13 +9,17 @@
             fill: $keppel;
         }
 
+        .input__label:before {
+            color: $black;
+        }
+
         .nice-select:after {
             border-color: $keppel;
         }
     }
     
     &__placeholder {
-        padding: 19px 51px 15px;
+        padding: 10px 34px;
         border-radius: 5px;
         border: none;
         outline: none;
@@ -23,10 +27,14 @@
         line-height: 1.6;
         color: $black;
 
+        @media (min-width: $break_md) {
+            padding: 19px 51px 15px;
+        }
+
         &::placeholder {
             font-size: 16px;
             line-height: 1.6;
-            color: $gray;
+            color: transparent;
         }
 
         &_select {
@@ -37,19 +45,94 @@
     
     &__icon {
         position: absolute;
-        left: 20px;
-        width: 24px;
-        height: 24px;
+        left: 12px;
+        width: 18px;
+        height: 18px;
         fill: $gray;
         transition: all .3s ease;
         z-index: 1;
+
+        @media (min-width: $break_md) {
+            left: 20px;
+            width: 24px;
+            height: 24px;
+        }
+    }
+
+    &__label {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        pointer-events: none;
+
+        &::before {
+            content: attr(data-title);
+            position: absolute;
+            top: 10px;
+            left: 35px;
+            font-size: 16px;
+            line-height: 1.6;
+            color: $gray;
+            transition: all .3s ease;
+
+            @media (min-width: $break_md) {
+                top: 18px;
+                left: 50px;
+            }
+        }
+    }
+
+    // Если есть выбранный option у селект
+    &:has(.nice-select .option.selected) .input__label::before,
+    // Если произошёл фокус на инпут
+    &:not(.input_select) .input__placeholder:focus ~ .input__label::before,
+    // Если в инпуте есть хоть один символ
+    &:not(.input_select) input.valid ~ .input__label::before {
+        color: $white;
+        background-color: $keppel;
+        font-size: 9px;
+        border-radius: 5px;
+        padding: 2px 7px 1px;
+        transform: translate3D(-23px, -19px, 0);
+
+        .nice-select:after {
+            border-color: $keppel;
+        }
+
+        @media (min-width: $break_md) {
+            transform: translate3D(-29px, -29px, 0);
+        }
+    }
+
+    &:has(.nice-select .option.selected) {
+        .nice-select .current {
+            color: $black;
+        }
+    }
+
+    &:has(.input__placeholder.valid) .input__icon,
+    &:has(.nice-select .option.selected) .input__icon,
+    &:not(.input_select) input.valid ~ .input__icon {
+        fill: $keppel;
     }
 }
 
-.nice-select:after {
-    right: 23px;
-}
+.nice-select {
+    &:after {
+        right: 23px;
+    }
 
-.nice-select-dropdown {
-    width: 100%;
+    &-dropdown {
+        width: 100%;
+    }
+
+    .current {
+        color: transparent;
+        transition-delay: .2s;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+        max-width: 100%;
+        display: block;
+    }
 }

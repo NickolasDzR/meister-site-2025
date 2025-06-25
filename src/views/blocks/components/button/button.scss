@@ -11,6 +11,12 @@
 
     &_transparent {
         border: 2px solid $white;
+        transition: all .3s ease;
+
+        &:hover {
+            background-color: $keppel;
+            border-color: $keppel;
+        }
     }
 
     &_keppel {
