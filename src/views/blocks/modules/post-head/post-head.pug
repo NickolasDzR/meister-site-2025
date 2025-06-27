@@ -1,0 +1,8 @@
+mixin postHead(value = false)
+    +b.post-head
+        +e.H1.title= value["title"]
+        +picture({
+            name: value["images"]["mobile"],
+            lg: true,
+            class: "image"
+        })

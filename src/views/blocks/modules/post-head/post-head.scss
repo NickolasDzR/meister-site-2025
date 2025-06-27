@@ -1,0 +1,34 @@
+.post-head {
+    position: relative;
+
+    &__title {
+        font-size: 26px;
+        font-weight: 600;
+        line-height: 1.33;
+        color: $white;
+
+        position: absolute;
+        bottom: 60px;
+        right: 15px;
+        left: 15px;
+
+        @media (min-width: $break_md) {
+            font-size: 36px;
+            max-width: 933px;
+        }
+
+        @media (min-width: $break_xxl) {
+            left: calc((100vw - 1560px + 15px) / 2);
+        }
+    }
+
+    &__image {
+        width: 100%;
+        height: 582px;
+        object-fit: cover;
+
+        @media (min-width: $break_xl) {
+
+        }
+    }
+}

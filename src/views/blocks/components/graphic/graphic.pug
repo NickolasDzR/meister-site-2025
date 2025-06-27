@@ -26,13 +26,13 @@ mixin picture(value = false)
                 md = value.md ? value.md : false;
     picture
         if lg
-            source(srcset=`../images/content/${value.name}.webp 1x,
-                ../images/content/${value.name}@2x.webp 2x`
-                media="(min-width: 768px)"
+            source(srcset=`../images/content/${value.name}-desk@1x.webp 1x,
+                ../images/content/${value.name}-desk@2x.webp 2x`
+                media="(min-width: 992px)"
                 type="image/webp"
             )
-            source(srcset=`../images/content/${value.name}.${value.format} 1x,
-                ../images/content/${value.name}@2x.${value.format} 2x`
+            source(srcset=`../images/content/${value.name}-tab@1x.webp 1x,
+                ../images/content/${value.name}-tab@2x.webp 2x`
                 media="(min-width: 768px)"
             )
         if md

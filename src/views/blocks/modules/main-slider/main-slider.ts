@@ -16,6 +16,7 @@ if (mainSlider) {
         const sliderSettings = {
             type: 'loop',
             autoplay: true,
+
             interval: 4000,
             speed: 600,
             pagination: false,
