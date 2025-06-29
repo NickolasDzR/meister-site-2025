@@ -1,0 +1,7 @@
+mixin postCards(postCards = false)
+    +b.post-cards
+        +e.UL.list
+            for card in postCards
+                +e.LI.item
+                    +postCard(card)
+

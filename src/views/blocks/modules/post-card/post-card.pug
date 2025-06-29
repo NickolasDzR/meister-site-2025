@@ -1,0 +1,10 @@
+mixin postCard(value = false)
+    +b.post-card()
+        +picture({
+            name: value['image'],
+            class: 'image'
+        })
+        +e.A.link(href=value['link'])
+            +e.DIV.content
+                +e.P.title= value['title']
+                +e.P.subtitle= value['subtitle']

@@ -1,0 +1,20 @@
+.post-cards {
+    &__list {
+        @media (min-width: $break_md) {
+            display: flex;
+            flex-wrap: wrap;
+        }
+    }
+
+    &__item {
+        display: flex;
+
+        @media (min-width: $break_md) {
+            flex: 50%;
+        }
+
+        @media (min-width: $break_xl) {
+            flex: 0 0 33.3333%;
+        }
+    }
+}

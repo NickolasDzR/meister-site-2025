@@ -14,8 +14,9 @@ module.exports = {
     plugins: [
         new PugPlugin({
             entry: {
-                index: 'src/views/index.pug',
-                posts: 'src/views/posts.pug',
+                'index': 'src/views/index.pug',
+                'single-post': 'src/views/single-post.pug',
+                'home': 'src/views/home.pug',
             }
         }),
         new CleanWebpackPlugin(),

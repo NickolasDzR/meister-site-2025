@@ -20,5 +20,10 @@
 @import '../views/blocks/modules/forms/cargo-calc/cargo-calc';
 
 
-// Стили страницы posts
+// Стили страницы single-post
 @import '../views/blocks/modules/post-head/post-head';
+@import '../views/blocks/modules/footer/footer';
+
+// Стили страницы home
+@import '../views/blocks/modules/post-cards/post-cards';
+@import '../views/blocks/modules/post-card/post-card';
