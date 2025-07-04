@@ -1,10 +1,22 @@
 import NiceSelect from "@nice-select2";
-import {addressesResponseType, niceSelect2Instance} from "@types";
+import {addressesResponseType, niceSelect2Instance, SelectSettings} from "@types";
+import {YMAPLoader} from "@utils";
+import {YMapApiKey} from "../../../../ts/main";
 
 const dadataUrl: string = "https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address";
 const token: string = "3f637eb956c800c700b18d79bb1fb687cdcb2b94";
 const secret: string = "28deeea55b3c9720d891d81b5c7797b94026d4d3";
 
+/**
+ * Выполняет HTTP-запрос к серверу Dadata.ru для получения адресных предложений по указанному запросу.
+ *
+ * @summary Запрашивает адресные предложения через API сервиса Dadata.ru.
+ * @description Возвращает промис объектов с результатами запросов по адресу.
+ * Использует аутентификационные токены ("token" и "secret") Которые можно получить в л/к dadata.ru.
+ *
+ * @param {string} query Строка запроса для поиска адреса.
+ * @return {Promise<addressesResponseType>} Промис объектов с результатами поиска адресов.
+ */
 const getDataAddress: (query: string) => Promise<addressesResponseType> = async (query: string) => {
     return await fetch(dadataUrl, {
         method: "POST",
@@ -27,6 +39,12 @@ const niceSelectInstance: Array<niceSelect2Instance> | any[] = [];
 
 let oldInputValue: string = "";
 
+/**
+ * Обработчик события изменения значения поля ввода.
+ * Выполняет асинхронный запрос для получения адресных предложений и обновляет содержимое выпадающего списка.
+ *
+ * @param {HTMLInputElement} input Поле ввода, чьё изменение инициировало событие.
+ */
 const onChangedInput = async (input: HTMLInputElement) => {
     const value = input.value;
 
@@ -36,46 +54,50 @@ const onChangedInput = async (input: HTMLInputElement) => {
     // При каждом вызове нужно делать fetch в dadata с поиском адресов по введёному ключу с debounce
     // Подставляем данные в нужный селект
 
-    const res = await getDataAddress(value);
+    const res: addressesResponseType = await getDataAddress(value);
 
     const results = Array.from(res["suggestions"], address => address["data"]["city_with_type"]);
 
     const parentInputBlock = input.closest(".input") as HTMLDivElement;
 
     if (parentInputBlock) {
-        const select = parentInputBlock.querySelector("select") as HTMLSelectElement;
-        const selectIndex = select.dataset['index']
+        const select = parentInputBlock.querySelector("select") as HTMLSelectElement | null;
+        if (select) {
+            const selectIndex = select.dataset['index']
 
-        if (results.length > 0) {
-            const options = select.querySelectorAll("option");
+            if (results.length > 0) {
+                const options = select.querySelectorAll("option") as NodeListOf<HTMLOptionElement>;
 
-            options.forEach(option => option.remove());
+                options.forEach(option => option.remove());
 
-            Array.from([...new Set(results)], (result, i) => {
-                const option = document.createElement("option") as HTMLOptionElement;
+                // ...New Set(results) нужен для удаления дублей из массива
+                Array.from([...new Set(results)], (result, i) => {
+                    const option = document.createElement("option") as HTMLOptionElement;
 
-                option.value = `${i}`;
-                option.innerText = result;
+                    option.value = `${i}`;
+                    option.innerText = result;
 
-                select.insertAdjacentElement("beforeend", option);
-            });
+                    select.insertAdjacentElement("beforeend", option);
+                });
 
-            oldInputValue = value;
+                oldInputValue = value;
 
-            if (niceSelectInstance) {
-                niceSelectInstance[`${selectIndex}`].update();
+                if (niceSelectInstance) {
+                    niceSelectInstance[`${selectIndex}`].update();
+                }
             }
+        } else {
+            console.error("Элемент select не найден");
         }
-    } else {
-        console.error("Селектор parentInputBlock не найден")
     }
 }
 
 
 let debounceInputChange = undefined as undefined | ReturnType<typeof setTimeout>;
 
-const newSelectSettings = {
+const newSelectSettings: SelectSettings = {
     searchable: true,
+    placeholder: 'Напишите город',
     onSearchInputChanged: (input) => {
         if (debounceInputChange) clearTimeout(debounceInputChange);
 
@@ -97,7 +119,7 @@ if (selects.length > 0) {
 
         (currentInput.querySelector("select") as HTMLSelectElement).dataset['index'] = `${i}`
 
-        dataSelectPlaceholder ? newSelectSettings['placeholder'] = dataSelectPlaceholder.dataset.select : 'Выберите';
+        dataSelectPlaceholder ? newSelectSettings['placeholder'] = <string>dataSelectPlaceholder.dataset.select : 'Выберите';
 
         const niceSelectCurrentInstance = new NiceSelect(select as HTMLSelectElement, newSelectSettings) as niceSelect2Instance;
 
@@ -105,31 +127,110 @@ if (selects.length > 0) {
     })
 }
 
+const cargoCalcButton = document.querySelector(".cargo-calc__button") as HTMLButtonElement;
+
+const getCargoFormInputValuesHandler = (button: HTMLButtonElement) => {
+    if (button && button.tagName === "BUTTON") {
+        const form = button.closest(".cargo-calc__form") as HTMLFormElement;
+
+        if (form && form.tagName === "FORM") {
+            // Оставляем только нужное. Лишнее в виде библи Nice-select2 убираем
+            let formElements =
+                [...form.elements]
+                    .filter(element =>
+                        element.classList.contains("input__placeholder")
+                    );
+
+            if (formElements.length > 0) {
+                const valueFormElements = {}
+
+                Array.from(formElements, (formElement: Element) => {
+                    if (formElement.tagName === "INPUT") {
+                        if (("name" in formElement) && ("value" in formElement)) {
+                            if (formElement["name"] && formElement["value"]) {
+                                valueFormElements[`${formElement["name"]}`] = formElement.value;
+                            } else {
+                                console.error(formElement["name"] ? "Отсутствует значение в инпуте, заполните инпут" : "У инпута должно быть name")
+                            }
+                        }
+                    } else if (formElement.tagName === "SELECT") {
+                        const dropdown = formElement.nextElementSibling as HTMLDivElement;
+
+                        if (dropdown) {
+                            const currentCityQuery = dropdown.querySelector(".current") as HTMLSpanElement;
+
+                            if (currentCityQuery) {
+                                const currentCity = currentCityQuery.innerText;
+
+                                // TODO переделать потом, чтобы сравнение было не по этой строке, а надёжнее сделать
+                                if (currentCity !== "Выберете место выгрузки") {
+                                    if ("name" in formElement && formElement["name"]) {
+                                        valueFormElements[`${formElement["name"]}`] = currentCity;
+                                    } else {
+                                        console.error("Отсутствует имя")
+                                    }
+                                }
+                            } else {
+                                console.error("span с классом .current и со значением у select не найден")
+                            }
+                        } else {
+                            console.error("dropdown не найден");
+                        }
+                    }
+                });
+
+                // TODO просчитываем киллометраж и выдаём данные
+                // cargoCalcHandler(valueFormElements)
+
+            } else {
+                console.error("Элементы не найдены")
+            }
+        } else {
+            console.error("Форма не найдена")
+        }
+    } else {
+        console.error("Кнопка не найдена")
+    }
+}
+
+cargoCalcButton.addEventListener("click", async (event) => {
+    event.preventDefault();
+
+    // let YMAPLoaderRes: Promise<any> = await YMAPLoader(YMapApiKey);
+
+    // TODO тут сделать прелоадер в качестве логотипа, у которого дорога едет, пока грузится карта. На всяк
+    // const onPreloadMap = () => {
+    //     turn on preload
+    // }
+
+    getCargoFormInputValuesHandler(event.target as HTMLButtonElement);
+})
+
 
 // @ts-ignore
-ymaps.ready(init);
-
-function init() {
-    // @ts-ignore
-    var multiRoute = new ymaps.multiRouter.MultiRoute({
-        referencePoints: [
-            [56.250567, 43.478801], // Точка А (например, координаты Красной площади)
-            [56.781984, 44.256649]  // Точка Б (например, координаты Парка Горького)
-        ],
-        params: {
-            results: 1 // Запрашиваем только один маршрут
-        }
-    }, {
-        boundsAutoApply: true // Автоматически подстраивать карту под маршрут
-    });
-
-    multiRoute.model.events.add('requestsuccess', function () {
-        var activeRoute = multiRoute.getActiveRoute();
-        if (activeRoute) {
-            var distance = activeRoute.properties.get("distance");
-            // distance будет в метрах, переводим в километры
-            var distanceKm = distance.value / 1000;
-            console.log("Расстояние между точками: " + distanceKm + " км");
-        }
-    });
-}
+// ymaps.ready(init);
+//
+// function init() {
+//     // @ts-ignore
+//     var multiRoute = new ymaps.multiRouter.MultiRoute({
+//         referencePoints: [
+//             [56.250567, 43.478801], // Точка А (например, координаты Красной площади)
+//             [56.781984, 44.256649]  // Точка Б (например, координаты Парка Горького)
+//         ],
+//         params: {
+//             results: 1 // Запрашиваем только один маршрут
+//         }
+//     }, {
+//         boundsAutoApply: true // Автоматически подстраивать карту под маршрут
+//     });
+//
+//     multiRoute.model.events.add('requestsuccess', function () {
+//         var activeRoute = multiRoute.getActiveRoute();
+//         if (activeRoute) {
+//             var distance = activeRoute.properties.get("distance");
+//             // distance будет в метрах, переводим в километры
+//             var distanceKm = distance.value / 1000;
+//             console.log("Расстояние между точками: " + distanceKm + " км");
+//         }
+//     });
+// }

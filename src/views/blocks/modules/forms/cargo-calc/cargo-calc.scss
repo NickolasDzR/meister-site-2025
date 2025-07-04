@@ -75,6 +75,7 @@
         align-items: center;
         justify-content: center;
         flex-direction: column;
+        position: relative;
 
         > * + * {
             margin-top: 20px;
@@ -83,6 +84,18 @@
                 margin-top: 35px;
             }
         }
+
+        // TODO Сделать так, чтобы не пропадал dropdown при поиске новых городов
+        //&:has(.nice-select.open) {
+        //    &::before {
+        //        content: "";
+        //        display: block;
+        //        position: absolute;
+        //        width: 100%;
+        //        height: 100%;
+        //        background-color: red;
+        //    }
+        //}
     }
 
     &__form {

@@ -5,7 +5,7 @@ mixin select(value = false)
                 name: value['icon'],
                 class: value['iconClass'] ? 'input__icon ' + value['iconClass'] : 'input__icon'
             })
-        +e.SELECT.placeholder.input__placeholder_select
+        +e.SELECT.placeholder.input__placeholder_select(name=value["name"])
             each option, index in value['options']
                 +e.option(value=index data-select=option)
         +e.LABEL.label(data-title=value['options'][0])

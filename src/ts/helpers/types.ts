@@ -47,3 +47,23 @@ export interface addressesResponseType {
         },
     ]
 }
+
+export interface SelectSettings {
+    /** Включает возможность поиска по списку */
+    searchable: boolean;
+
+    /** Подсказывающий текст-плейсхолдер для поля поиска */
+    placeholder: string;
+
+    /**
+     * Колбэк-функция, вызываемая при изменении значения поля поиска.
+     * @param input Текущее значение поля поиска.
+     */
+    onSearchInputChanged?: (input: HTMLInputElement) => void;
+
+    /**
+     * Колбэк-функция, вызываемая после обновления компонента.
+     * @param dropdown Элемент, представляющий компонент выпадающего списка.
+     */
+    afterUpdated?: (dropdown: Element) => void;
+}

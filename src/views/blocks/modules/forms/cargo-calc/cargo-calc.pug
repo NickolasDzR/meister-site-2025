@@ -10,18 +10,21 @@ mixin cargoCalc(value = false)
                     options: ['Выберете место загрузки'],
                     parentClass: 'cargo-calc__input',
                     icon: 'location',
+                    name: 'location_1'
                 })
                 +select({
                     options: ['Выберете место выгрузки'],
                     parentClass: 'cargo-calc__input',
                     icon: 'location',
+                    name: 'location_2'
                 })
                 +input({
                     placeholder: 'Тоннаж',
                     class: 'cargo-calc__input',
                     placeholderClass: 'cargo-calc__placeholder',
                     icon: 'weight',
-                    iconClass: 'cargo-calc__placeholder-icon'
+                    iconClass: 'cargo-calc__placeholder-icon',
+                    name: 'weight'
                 })
                 +button({
                     type: 'keppel',
