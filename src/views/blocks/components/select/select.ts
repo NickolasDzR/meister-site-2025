@@ -1,67 +1,93 @@
 import NiceSelect from "@nice-select2";
-import {ClassWatcher} from "@classWatcher";
-import dadata from "@dadatajson";
-import {DadataJson, niceSelect2Instance} from "@types";
+import {addressesResponseType, niceSelect2Instance} from "@types";
 
-const selects = document.querySelectorAll(".input__placeholder_select") as NodeListOf<HTMLSelectElement>;
-const url = "../../json/dadata.json";
-const token = "3f637eb956c800c700b18d79bb1fb687cdcb2b94";
-const secret = "28deeea55b3c9720d891d81b5c7797b94026d4d3";
+const dadataUrl: string = "https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address";
+const token: string = "3f637eb956c800c700b18d79bb1fb687cdcb2b94";
+const secret: string = "28deeea55b3c9720d891d81b5c7797b94026d4d3";
 
-var dadataOptions = {
-    method: "POST",
-    headers: {
-        "Content-Type": "application/json",
-    },
+const getDataAddress: (query: string) => Promise<addressesResponseType> = async (query: string) => {
+    return await fetch(dadataUrl, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Token " + token,
+            "X-Secret": secret
+        },
+        body: JSON.stringify({query: query, count: 20})
+    })
+        .then(r => r)
+        .then(r => r.text())
+        .then(r => JSON.parse(r))
+        .catch(error => error)
 }
 
-const niceSelectInstance:Array<niceSelect2Instance> | any[] = [];
+const selects = document.querySelectorAll(".input__placeholder_select") as NodeListOf<HTMLSelectElement>;
 
-const onChangedInput = (event: Event) => {
-    const input = event.target as HTMLInputElement;
+const niceSelectInstance: Array<niceSelect2Instance> | any[] = [];
+
+let oldInputValue: string = "";
+
+const onChangedInput = async (input: HTMLInputElement) => {
     const value = input.value;
 
     // TODO должен быть фетч с поиском по результатам в value, который нужно будет сделать настоящий
     // TODO Еще придумать regex, который будет выделять строку из value с результатом, который придёт от dadata
 
-    const results = Array.from(dadata as Array<DadataJson>, address => address.result);
+    // При каждом вызове нужно делать fetch в dadata с поиском адресов по введёному ключу с debounce
+    // Подставляем данные в нужный селект
+
+    const res = await getDataAddress(value);
+
+    const results = Array.from(res["suggestions"], address => address["data"]["city_with_type"]);
 
     const parentInputBlock = input.closest(".input") as HTMLDivElement;
-    const select = parentInputBlock.querySelector("select") as HTMLSelectElement;
-    const selectIndex = select.dataset['index']
 
-    if (dadata.length > 0) {
-        const options = select.querySelectorAll("option");
+    if (parentInputBlock) {
+        const select = parentInputBlock.querySelector("select") as HTMLSelectElement;
+        const selectIndex = select.dataset['index']
 
-        options.forEach(option => option.remove());
+        if (results.length > 0) {
+            const options = select.querySelectorAll("option");
 
-        Array.from(results, (result, i) => {
-            const option = document.createElement("option") as HTMLOptionElement;
+            options.forEach(option => option.remove());
 
-            option.value = `${i}`;
-            option.innerText = result;
+            Array.from([...new Set(results)], (result, i) => {
+                const option = document.createElement("option") as HTMLOptionElement;
 
-            select.insertAdjacentElement("beforeend", option);
+                option.value = `${i}`;
+                option.innerText = result;
+
+                select.insertAdjacentElement("beforeend", option);
+            });
+
+            oldInputValue = value;
 
             if (niceSelectInstance) {
                 niceSelectInstance[`${selectIndex}`].update();
             }
-        })
+        }
+    } else {
+        console.error("Селектор parentInputBlock не найден")
     }
 }
 
 
-const onAddNewTag = (elem: HTMLElement) => {
-    const currentSelect = elem as HTMLSelectElement;
-    const dropdown = currentSelect.nextElementSibling as HTMLDivElement;
-    const input = dropdown.querySelector(".nice-select-search") as HTMLInputElement;
-
-    input.addEventListener("input", onChangedInput)
-
-}
+let debounceInputChange = undefined as undefined | ReturnType<typeof setTimeout>;
 
 const newSelectSettings = {
     searchable: true,
+    onSearchInputChanged: (input) => {
+        if (debounceInputChange) clearTimeout(debounceInputChange);
+
+        debounceInputChange = setTimeout(onChangedInput, 300, input);
+    },
+    afterUpdated: (dropdown) => {
+        const currentInput = dropdown.querySelector(".nice-select-search") as HTMLSelectElement;
+
+        currentInput.value = oldInputValue;
+
+        oldInputValue = "";
+    }
 }
 
 if (selects.length > 0) {
@@ -73,15 +99,11 @@ if (selects.length > 0) {
 
         dataSelectPlaceholder ? newSelectSettings['placeholder'] = dataSelectPlaceholder.dataset.select : 'Выберите';
 
-        new ClassWatcher('tag', currentInput, 'open', onAddNewTag.bind(this, select))
-
         const niceSelectCurrentInstance = new NiceSelect(select as HTMLSelectElement, newSelectSettings) as niceSelect2Instance;
 
         niceSelectInstance.push(niceSelectCurrentInstance);
     })
 }
-
-
 
 
 // @ts-ignore

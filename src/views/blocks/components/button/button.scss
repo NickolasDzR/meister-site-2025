@@ -8,10 +8,10 @@
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    transition: all .3s ease;
 
     &_transparent {
         border: 2px solid $white;
-        transition: all .3s ease;
 
         &:hover {
             background-color: $keppel;
@@ -22,5 +22,11 @@
     &_keppel {
         background-color: $keppel;
         border-radius: 0;
+
+        &:hover {
+            background-color: $white;
+            border-color: $white;
+            color: $keppel
+        }
     }
 }

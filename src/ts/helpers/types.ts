@@ -1,18 +1,3 @@
-export interface DadataJson {
-    "source": string,
-    "result": string,
-    "postal_code": string,
-    "country": string,
-    "region": string,
-    "city_area": string,
-    "city_district": string,
-    "street": string,
-    "house": string,
-    "geo_lat": string,
-    "geo_lon": string,
-    "qc_geo": number
-}
-
 export interface niceSelect2Instance {
     update: Function;
     "el": HTMLElement,
@@ -52,5 +37,13 @@ export interface niceSelect2Instance {
             },
             "element": {}
         }
+    ]
+}
+
+export interface addressesResponseType {
+    "suggestions": [
+        {
+            "city_with_type": string,
+        },
     ]
 }

@@ -126,6 +126,10 @@
         width: 100%;
     }
 
+    .nice-select-dropdown {
+        box-shadow: 0 4px 10px 7px rgba(0, 0, 0, 0.4);
+    }
+
     .current {
         color: transparent;
         transition-delay: .2s;
@@ -134,5 +138,31 @@
         overflow: hidden;
         max-width: 100%;
         display: block;
+    }
+
+    .option {
+        white-space: break-spaces;
+        font-size: 16px;
+        line-height: 2.4;
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .list {
+        li {
+            position: relative;
+        }
+        
+        li + li {
+            &:before {
+                content: "";
+                display: block;
+                position: absolute;
+                width: 90%;
+                height: 1px;
+                background-color: #1A1A1A;
+                opacity: 0.3;
+            }
+        }
     }
 }
