@@ -14,10 +14,10 @@ export const download = {
         });
     },
 }
+
 /**
  * Загружаем YMAP
  */
-
 export const YMAPLoader = async (apikey: string): Promise<any> => {
     if (!apikey) {
         console.error("Нужно передать API key яндекс карт")
@@ -27,3 +27,10 @@ export const YMAPLoader = async (apikey: string): Promise<any> => {
 
     return await download.script(currentUlr, "ymapInstance")
 }
+
+/**
+ * Убираем пустые значения в объектах массива
+ * @param array
+ * @param key
+ */
+export const removeEmptyValues = (array: Object[], key: string) => array.filter(object => object[key] !== null)

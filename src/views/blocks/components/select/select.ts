@@ -1,5 +1,5 @@
 import NiceSelect from "@nice-select2";
-import {addressesResponseType, niceSelect2Instance, SelectSettings} from "@types";
+import {addressesResponseType, formatedAddressesResponseType, niceSelect2Instance, SelectSettings} from "@types";
 import {YMAPLoader} from "@utils";
 import {YMapApiKey} from "../../../../ts/main";
 
@@ -56,12 +56,26 @@ const onChangedInput = async (input: HTMLInputElement) => {
 
     const res: addressesResponseType = await getDataAddress(value);
 
-    const results = Array.from(res["suggestions"], address => address["data"]["city_with_type"]);
+    // Получаем нужные данные
+    const results = Array.from(res["suggestions"], address => {
+        return {
+            "city": address["data"]["city_with_type"],
+            "lon": address["data"]["geo_lon"],
+            "lat": address["data"]["geo_lat"]
+        } as formatedAddressesResponseType
+    })
+
+    // Удаляем пустые (null) значения и дубли
+    const uniqueLocations = [...new Map(results
+        .filter(({ city }) => city != null)
+        .map(obj => [obj.city, obj]) // Группируем по городу
+    ).values()];
 
     const parentInputBlock = input.closest(".input") as HTMLDivElement;
 
     if (parentInputBlock) {
         const select = parentInputBlock.querySelector("select") as HTMLSelectElement | null;
+
         if (select) {
             const selectIndex = select.dataset['index']
 
@@ -71,11 +85,13 @@ const onChangedInput = async (input: HTMLInputElement) => {
                 options.forEach(option => option.remove());
 
                 // ...New Set(results) нужен для удаления дублей из массива
-                Array.from([...new Set(results)], (result, i) => {
+                Array.from(uniqueLocations, (location: formatedAddressesResponseType, i: number) => {
                     const option = document.createElement("option") as HTMLOptionElement;
 
                     option.value = `${i}`;
-                    option.innerText = result;
+                    option.innerText = location["city"];
+                    option.dataset.lat = `${location["lat"]}`;
+                    option.dataset.lon = `${location["lon"]}`;
 
                     select.insertAdjacentElement("beforeend", option);
                 });
@@ -144,6 +160,7 @@ const getCargoFormInputValuesHandler = (button: HTMLButtonElement) => {
             if (formElements.length > 0) {
                 const valueFormElements = {}
 
+                // TODO получение данных с формы и преобразование их в object нужно вынести в отдельный метод
                 Array.from(formElements, (formElement: Element) => {
                     if (formElement.tagName === "INPUT") {
                         if (("name" in formElement) && ("value" in formElement)) {
@@ -181,6 +198,7 @@ const getCargoFormInputValuesHandler = (button: HTMLButtonElement) => {
 
                 // TODO просчитываем киллометраж и выдаём данные
                 // cargoCalcHandler(valueFormElements)
+                console.log(valueFormElements);
 
             } else {
                 console.error("Элементы не найдены")

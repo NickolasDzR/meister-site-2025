@@ -44,8 +44,16 @@ export interface addressesResponseType {
     "suggestions": [
         {
             "city_with_type": string,
+            "geo_lat": "string",
+            "geo_lon": "string",
         },
     ]
+}
+
+export interface formatedAddressesResponseType {
+    "city": string,
+    "lon": string,
+    "lat": string,
 }
 
 export interface SelectSettings {

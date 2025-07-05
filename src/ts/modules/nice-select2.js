@@ -419,6 +419,12 @@ NiceSelect.prototype._onItemClicked = function (option, e) {
             this.selectedOptions = [option];
         }
 
+        if (this.config.onElementClicked && typeof this.config.onElementClicked === 'function') {
+            if (optionEl.dataset.value) {
+                this.config.onElementClicked();
+            }
+        }
+
         this._renderSelectedItems();
         this.updateSelectValue();
     }
