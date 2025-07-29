@@ -395,6 +395,10 @@ NiceSelect.prototype._onClicked = function (e) {
 NiceSelect.prototype._onItemClicked = function (option, e) {
     var optionEl = e.target;
 
+    if (this.config.onClickedItem && typeof this.config.onClickedItem === 'function') {
+        this.config.onClickedItem(optionEl);
+    }
+
     if (!hasClass(optionEl, "disabled")) {
         if (this.multiple) {
             if (hasClass(optionEl, "selected")) {

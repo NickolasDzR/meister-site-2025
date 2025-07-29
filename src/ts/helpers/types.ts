@@ -51,7 +51,7 @@ export interface addressesResponseType {
 }
 
 export interface formatedAddressesResponseType {
-    "city": string,
+    "value": string,
     "lon": string,
     "lat": string,
 }
@@ -74,4 +74,24 @@ export interface SelectSettings {
      * @param dropdown Элемент, представляющий компонент выпадающего списка.
      */
     afterUpdated?: (dropdown: Element) => void;
+
+    /**
+     * Колбэк-функция, вызываемая после клика на найденый город
+     * @param item
+     */
+    onClickedItem?: (item: HTMLLIElement) => void;
+}
+
+export interface valueFormElementsTypes {
+    "location_0": string[],
+    "location_1": string[],
+    "weight": string
+}
+
+export type WeightCategory = 'upTo2Tons' | 'from2to5Tons' | 'from5to10Tons' | 'from10to20Tons';
+
+export interface DeliveryCostConfig {
+    minWeight: number;
+    maxWeight: number;
+    costPerKm: number;
 }

@@ -27,6 +27,6 @@
 
             "@dadatajson": ["json/dadata.json"],
         },
-        "typeRoots": ["./src/ts/helpers/types.ts"]
+        "typeRoots": ["./src/ts/helpers/types.ts", "node_modules/@types"]
     }
 }

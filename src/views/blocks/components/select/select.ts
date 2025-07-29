@@ -1,7 +1,15 @@
 import NiceSelect from "@nice-select2";
-import {addressesResponseType, formatedAddressesResponseType, niceSelect2Instance, SelectSettings} from "@types";
+import {
+    addressesResponseType, DeliveryCostConfig,
+    formatedAddressesResponseType,
+    niceSelect2Instance,
+    SelectSettings,
+    valueFormElementsTypes, WeightCategory
+} from "@types";
 import {YMAPLoader} from "@utils";
 import {YMapApiKey} from "../../../../ts/main";
+
+declare var ymaps: any;
 
 const dadataUrl: string = "https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address";
 const token: string = "3f637eb956c800c700b18d79bb1fb687cdcb2b94";
@@ -48,7 +56,6 @@ let oldInputValue: string = "";
 const onChangedInput = async (input: HTMLInputElement) => {
     const value = input.value;
 
-    // TODO должен быть фетч с поиском по результатам в value, который нужно будет сделать настоящий
     // TODO Еще придумать regex, который будет выделять строку из value с результатом, который придёт от dadata
 
     // При каждом вызове нужно делать fetch в dadata с поиском адресов по введёному ключу с debounce
@@ -59,16 +66,16 @@ const onChangedInput = async (input: HTMLInputElement) => {
     // Получаем нужные данные
     const results = Array.from(res["suggestions"], address => {
         return {
-            "city": address["data"]["city_with_type"],
+            "value": address["value"],
             "lon": address["data"]["geo_lon"],
             "lat": address["data"]["geo_lat"]
         } as formatedAddressesResponseType
-    })
+    });
 
     // Удаляем пустые (null) значения и дубли
     const uniqueLocations = [...new Map(results
-        .filter(({ city }) => city != null)
-        .map(obj => [obj.city, obj]) // Группируем по городу
+        .filter(({value}) => value != null)
+        .map(obj => [obj.value, obj]) // Группируем по городу
     ).values()];
 
     const parentInputBlock = input.closest(".input") as HTMLDivElement;
@@ -89,7 +96,7 @@ const onChangedInput = async (input: HTMLInputElement) => {
                     const option = document.createElement("option") as HTMLOptionElement;
 
                     option.value = `${i}`;
-                    option.innerText = location["city"];
+                    option.innerText = `${location["value"]}`;
                     option.dataset.lat = `${location["lat"]}`;
                     option.dataset.lon = `${location["lon"]}`;
 
@@ -105,6 +112,223 @@ const onChangedInput = async (input: HTMLInputElement) => {
         } else {
             console.error("Элемент select не найден");
         }
+    }
+}
+
+const onReadResultsDoneHandler = (event) => {
+    event.preventDefault();
+
+    const costCalculatedBlock = document.querySelector(".cost-calculated") as HTMLDivElement;
+
+    if (costCalculatedBlock) {
+        const cargoCalcDeliveryResultsWrapper = document.querySelector(".cargo-calc__delivery-results-wrapper") as HTMLDivElement;
+
+        if (cargoCalcDeliveryResultsWrapper) {
+            costCalculatedBlock.addEventListener("transitionend", () => {
+                setTimeout(() => {
+                    cargoCalcDeliveryResultsWrapper.innerText = '';
+                }, 100)
+            }, {once: true});
+        }
+
+        costCalculatedBlock.classList.remove("cost-calculated");
+    }
+}
+
+/**
+ *
+ * @param distance
+ */
+const textGenerationHandler = (distance: string): string => {
+    if (distance) {
+        return `
+            <p class="cargo-calc__delivery-results-text">
+                Стоимость рейса составит примерно 
+                <span class="cargo-calc__delivery-results-text-cost">${distance}</span> 
+                рублей.
+            </p>
+            <p class="cargo-calc__delivery-results-text">
+                Для более точного расчёта стоимости рейса позвоните нашему менеджеру по телефону 
+                <span style="white-space: nowrap">+7 999 120 59 82</span>, 
+                поскольку нужны дополнительные данные о характере груза.
+            </p>
+        `
+    } else {
+        return `
+            <p class="cargo-calc__delivery-results-text">
+                К сожалению, не удалось рассчитать стоимость рейса.
+            </p>
+            <p class="cargo-calc__delivery-results-text">
+                Возможно, выбранный маршрут временно недоступен либо произошла техническая ошибка.
+                
+                Рекомендуем связаться с нашими специалистами по указанному телефону для уточнения деталей расчета.
+                <span style="white-space: nowrap">+7 999 120 59 82</span>
+            </p>
+        `
+    }
+}
+
+const showUserResults = (deliveryCosts: string | undefined, form: HTMLFormElement) => {
+    const formParent = form.closest(".cargo-calc") as HTMLDivElement;
+    const costTextWrapper = formParent.querySelector(".cargo-calc__delivery-results-wrapper") as HTMLSpanElement;
+
+    if (deliveryCosts || typeof deliveryCosts !== 'string') {
+        if (costTextWrapper) {
+            costTextWrapper.insertAdjacentHTML('afterbegin', textGenerationHandler(deliveryCosts as string))
+
+            formParent.classList.add("cost-calculated");
+        }
+    } else {
+
+    }
+}
+
+const deliveryCosts: Record<WeightCategory, DeliveryCostConfig> = {
+    upTo2Tons: {minWeight: 0, maxWeight: 2, costPerKm: 40},
+    from2to5Tons: {minWeight: 2, maxWeight: 5, costPerKm: 52},
+    from5to10Tons: {minWeight: 5, maxWeight: 10, costPerKm: 85},
+    from10to20Tons: {minWeight: 10, maxWeight: 20, costPerKm: 120}
+};
+
+const formEventHandler = (event) => {
+    let text = undefined as string | undefined;
+    const form = event.target as HTMLFormElement;
+
+    if (event.detail.data) {
+        const distance = +(event.detail.data as string) as number;
+        const cargoWeightInput = form.querySelector(".cargo-calc__placeholder[name='weight']") as HTMLInputElement;
+
+        if (cargoWeightInput) {
+            const cargoWeight = +cargoWeightInput.value as number;
+            let category: WeightCategory;
+
+            // Определяем категорию груза по весу
+            if (cargoWeight >= deliveryCosts.upTo2Tons.minWeight && cargoWeight <= deliveryCosts.upTo2Tons.maxWeight) {
+                category = 'upTo2Tons';
+            } else if (cargoWeight >= deliveryCosts.from2to5Tons.minWeight && cargoWeight <= deliveryCosts.from2to5Tons.maxWeight) {
+                category = 'from2to5Tons';
+            } else if (cargoWeight >= deliveryCosts.from5to10Tons.minWeight && cargoWeight <= deliveryCosts.from5to10Tons.maxWeight) {
+                category = 'from5to10Tons';
+            } else if (cargoWeight >= deliveryCosts.from10to20Tons.minWeight && cargoWeight <= deliveryCosts.from10to20Tons.maxWeight) {
+                category = 'from10to20Tons';
+            } else {
+                console.error(`Вес ${cargoWeight} тонн вне допустимого диапазона.`);
+                return false;
+            }
+
+            // Берём цену за км согласно категории груза
+            const costPerKm = deliveryCosts[category].costPerKm as number;
+
+            // Передаём данные в обработчик результатов и показываем пользователю
+            text = String(Math.round(costPerKm * distance));
+        }
+    // Если у нас ошибка в возвращаемом значении дистации между точками
+    } else {
+        text = undefined;
+    }
+
+    showUserResults(text, form);
+};
+
+let multiRoute: any;
+
+const costCalculator = (coord: [number, number], form: HTMLFormElement) => {
+    if (multiRoute) {
+        // @ts-ignore
+        multiRoute.model.setReferencePoints(coord, [], []);   // Устанавливаем новые координаты
+    } else {
+        multiRoute = new ymaps.multiRouter.MultiRoute({
+            referencePoints: coord
+        }, {});
+
+        multiRoute.model.events.add('requestsuccess', function () {
+            const activeRoute = multiRoute.getActiveRoute();
+
+            const distance = activeRoute ? activeRoute.properties.get("distance", {}) : activeRoute;
+            // distance будет в метрах, переводим в километры
+            // const distanceKm = distance["value"] / 1000;
+
+            // console.log("Расстояние между точками: " + distanceKm + " км", typeof distanceKm);
+
+            const customEvent = new CustomEvent('formCalculationEvent', {
+                detail: {
+                    data: distance ? distance["value"] / 1000 : distance,
+                    timestamp: Date.now()
+                },
+                cancelable: true,
+                bubbles: true,
+            });
+
+            form.dispatchEvent(customEvent);
+        });
+
+        form.addEventListener("formCalculationEvent", formEventHandler);
+
+        const cargoCalcButtonResults = document.querySelector(".cargo-calc__button-results") as HTMLButtonElement;
+
+        if (cargoCalcButtonResults) {
+            cargoCalcButtonResults.addEventListener("click", onReadResultsDoneHandler)
+        }
+    }
+}
+
+const getFormValues = (form: HTMLFormElement): valueFormElementsTypes | undefined | {} => {
+
+    if (form && form.tagName === "FORM") {
+        // Оставляем только нужное. Лишнее в виде элементов библии Nice-select2 убираем
+        let formElements =
+            [...form.elements]
+                .filter(element =>
+                    element.classList.contains("input__placeholder")
+                );
+
+        if (formElements.length > 0) {
+            const valueFormElements: valueFormElementsTypes | {} = {}
+
+            // TODO получение данных с формы и преобразование их в object нужно вынести в отдельный метод
+            Array.from(formElements, (formElement: Element) => {
+                if (formElement.tagName === "INPUT") {
+                    if (("name" in formElement) && ("value" in formElement)) {
+                        if (formElement["name"] && formElement["value"]) {
+                            valueFormElements[`${formElement["name"]}`] = formElement.value;
+                        } else {
+                            console.error(formElement["name"] ? "Отсутствует значение в инпуте, заполните инпут" : "У инпута должно быть name")
+                        }
+                    }
+                } else if (formElement.tagName === "SELECT") {
+                    const dropdown = formElement.nextElementSibling as HTMLDivElement;
+
+                    if (dropdown) {
+
+                        const parentSelect = dropdown.closest(".cargo-calc__input") as HTMLDivElement;
+
+                        if (parentSelect) {
+                            if (Object.keys(parentSelect.dataset).length > 0 && parentSelect.dataset.lon && parentSelect.dataset.lat) {
+                                const lat = parentSelect.dataset.lat as string;
+                                const lon = parentSelect.dataset.lon as string;
+
+                                if ("name" in formElement && formElement["name"]) {
+                                    valueFormElements[`${formElement["name"]}`] = [Number(lat), Number(lon)] as [number, number];
+                                }
+                            } else {
+                                console.error("data-lan, data-lat - отсутвует один или оба этих значения");
+                            }
+                        } else {
+                            console.error("Элемент с классом .cargo-calc__input не найден")
+                        }
+                    } else {
+                        console.error("dropdown не найден");
+                    }
+                }
+            });
+
+            return valueFormElements
+
+        } else {
+            console.error("Элементы не найдены")
+        }
+    } else {
+        console.error("Форма не найдена")
     }
 }
 
@@ -125,6 +349,40 @@ const newSelectSettings: SelectSettings = {
         currentInput.value = oldInputValue;
 
         oldInputValue = "";
+    },
+    onClickedItem: (item) => {
+        if (item) {
+            // Проверяем есть ли у него dataset и есть ли dataset со значением - value;
+            if (Object.keys(item.dataset).length > 0 && item.dataset.value) {
+                const itemIndex = parseInt(item.dataset.value);
+                const parentSelect = item.closest(".cargo-calc__input") as HTMLDivElement;
+
+                if (parentSelect) {
+                    const currentOption = parentSelect.querySelector(`option[value='${itemIndex}']`) as HTMLOptionElement
+
+                    if (currentOption) {
+                        if (Object.keys(currentOption.dataset).length > 0 && currentOption.dataset.lon && currentOption.dataset.lat) {
+                            const lat = currentOption.dataset.lat as string;
+                            const lon = currentOption.dataset.lon as string;
+
+                            parentSelect.dataset.lat = lat;
+                            parentSelect.dataset.lon = lon;
+                        } else {
+                            console.error("data-lan, data-lat - отсутвует один или оба этих значения");
+                        }
+                    } else {
+                        console.error("Запрашеваемый option не найден")
+                    }
+                } else {
+                    console.error("родитель с классом .cargo-calc__input не найден")
+                }
+            } else {
+                console.error("Отсутствует dataset со значением value");
+            }
+        } else {
+            console.error("Выбранный элемент не найден")
+        }
+
     }
 }
 
@@ -145,67 +403,47 @@ if (selects.length > 0) {
 
 const cargoCalcButton = document.querySelector(".cargo-calc__button") as HTMLButtonElement;
 
-const getCargoFormInputValuesHandler = (button: HTMLButtonElement) => {
+const getCargoFormInputValuesHandler = async (button: HTMLButtonElement) => {
     if (button && button.tagName === "BUTTON") {
         const form = button.closest(".cargo-calc__form") as HTMLFormElement;
 
-        if (form && form.tagName === "FORM") {
-            // Оставляем только нужное. Лишнее в виде библи Nice-select2 убираем
-            let formElements =
-                [...form.elements]
-                    .filter(element =>
-                        element.classList.contains("input__placeholder")
-                    );
+        // Собираем данные с формы
+        const valueFormElements = getFormValues(form);
 
-            if (formElements.length > 0) {
-                const valueFormElements = {}
+        // Проверил, есть ли все данные введенные в форме
+        if (valueFormElements && valueFormElements["location_0"] && valueFormElements["location_1"] && valueFormElements["weight"]) {
+            // После загружаем яндекс карты
 
-                // TODO получение данных с формы и преобразование их в object нужно вынести в отдельный метод
-                Array.from(formElements, (formElement: Element) => {
-                    if (formElement.tagName === "INPUT") {
-                        if (("name" in formElement) && ("value" in formElement)) {
-                            if (formElement["name"] && formElement["value"]) {
-                                valueFormElements[`${formElement["name"]}`] = formElement.value;
-                            } else {
-                                console.error(formElement["name"] ? "Отсутствует значение в инпуте, заполните инпут" : "У инпута должно быть name")
-                            }
-                        }
-                    } else if (formElement.tagName === "SELECT") {
-                        const dropdown = formElement.nextElementSibling as HTMLDivElement;
-
-                        if (dropdown) {
-                            const currentCityQuery = dropdown.querySelector(".current") as HTMLSpanElement;
-
-                            if (currentCityQuery) {
-                                const currentCity = currentCityQuery.innerText;
-
-                                // TODO переделать потом, чтобы сравнение было не по этой строке, а надёжнее сделать
-                                if (currentCity !== "Выберете место выгрузки") {
-                                    if ("name" in formElement && formElement["name"]) {
-                                        valueFormElements[`${formElement["name"]}`] = currentCity;
-                                    } else {
-                                        console.error("Отсутствует имя")
-                                    }
-                                }
-                            } else {
-                                console.error("span с классом .current и со значением у select не найден")
-                            }
-                        } else {
-                            console.error("dropdown не найден");
-                        }
-                    }
-                });
-
-                // TODO просчитываем киллометраж и выдаём данные
-                // cargoCalcHandler(valueFormElements)
-                console.log(valueFormElements);
-
-            } else {
-                console.error("Элементы не найдены")
-            }
+            // Отправляем данные в калькулятор цены ПОСЛЕ ТОГО КАК ЯНДЕКС КАРТЫ ЗАГРУЗИЛИСЬ
+            // Этот метод сам с этим всем справляется и продолжает дальнешие действия
+            ymaps.ready(() => {
+                costCalculator([valueFormElements["location_0"], valueFormElements["location_1"]], form);
+            })
         } else {
-            console.error("Форма не найдена")
+            console.error("Отсутствует одно из значений для просчёта стоимости рейса")
         }
+
+        // ymaps.ready(() => {
+        //     if (multiRoute) {
+        //         multiRoute.setReferencePoints([valueFormElements["location_0"], valueFormElements["location_1"]]);
+        //     } else {
+        //         costCalculator([valueFormElements["location_0"], valueFormElements["location_1"]])
+        //     }
+        // });
+
+
+            // await YMAPLoader(YMapApiKey)
+        //
+        //     // const setYMAPDownloadInterval = undefined as undefined | ReturnType<typeof setTimeout>;
+        //
+        //     ymaps.ready(() => {
+        //         if (multiRoute) {
+        //             multiRoute.setReferencePoints([valueFormElements["location_0"], valueFormElements["location_1"]]);
+        //         } else {
+        //             costCalculator([valueFormElements["location_0"], valueFormElements["location_1"]])
+        //         }
+        //     });
+
     } else {
         console.error("Кнопка не найдена")
     }
@@ -214,7 +452,7 @@ const getCargoFormInputValuesHandler = (button: HTMLButtonElement) => {
 cargoCalcButton.addEventListener("click", async (event) => {
     event.preventDefault();
 
-    // let YMAPLoaderRes: Promise<any> = await YMAPLoader(YMapApiKey);
+    await YMAPLoader(YMapApiKey);
 
     // TODO тут сделать прелоадер в качестве логотипа, у которого дорога едет, пока грузится карта. На всяк
     // const onPreloadMap = () => {
@@ -223,32 +461,3 @@ cargoCalcButton.addEventListener("click", async (event) => {
 
     getCargoFormInputValuesHandler(event.target as HTMLButtonElement);
 })
-
-
-// @ts-ignore
-// ymaps.ready(init);
-//
-// function init() {
-//     // @ts-ignore
-//     var multiRoute = new ymaps.multiRouter.MultiRoute({
-//         referencePoints: [
-//             [56.250567, 43.478801], // Точка А (например, координаты Красной площади)
-//             [56.781984, 44.256649]  // Точка Б (например, координаты Парка Горького)
-//         ],
-//         params: {
-//             results: 1 // Запрашиваем только один маршрут
-//         }
-//     }, {
-//         boundsAutoApply: true // Автоматически подстраивать карту под маршрут
-//     });
-//
-//     multiRoute.model.events.add('requestsuccess', function () {
-//         var activeRoute = multiRoute.getActiveRoute();
-//         if (activeRoute) {
-//             var distance = activeRoute.properties.get("distance");
-//             // distance будет в метрах, переводим в километры
-//             var distanceKm = distance.value / 1000;
-//             console.log("Расстояние между точками: " + distanceKm + " км");
-//         }
-//     });
-// }
