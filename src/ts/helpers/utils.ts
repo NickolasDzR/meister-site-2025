@@ -34,3 +34,24 @@ export const YMAPLoader = async (apikey: string): Promise<any> => {
  * @param key
  */
 export const removeEmptyValues = (array: Object[], key: string) => array.filter(object => object[key] !== null)
+
+/**
+ *
+ * @param form
+ */
+export const inputEventHandler = (form: HTMLElement) => {
+    if (form) {
+
+    } else {
+        console.error("Нужно передать форму с инпутами")
+    }
+}
+
+export const buttonActiveHandler = {
+    disable: (button: HTMLButtonElement) => {
+
+    },
+    enable: (button: HTMLButtonElement) => {
+
+    }
+}

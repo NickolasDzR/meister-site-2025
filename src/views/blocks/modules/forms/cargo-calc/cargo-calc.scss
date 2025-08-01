@@ -81,6 +81,22 @@
         background-color: $white;
     }
 
+    // Логика:
+    // Если в инпуте есть option со значением data-empty
+    // Значит местоположение не найдено, и li
+    // который генерирует nice-select нужно сделать
+    // Не кликабельным
+
+    // Расшифровка:
+    // Если в родителе мы находим селект с классном, внутри которого
+    // Есть элемент с data-empty, то присваиваем
+    // Элементу списка, который находится в nice-select .list нужный стиль
+    &__input:has(.input__placeholder_select [data-empty]) {
+        .nice-select .list li {
+            pointer-events: none;
+        }
+    }
+
     &__input, &__placeholder {
         width: 100%;
 

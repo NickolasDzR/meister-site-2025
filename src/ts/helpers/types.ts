@@ -52,8 +52,8 @@ export interface addressesResponseType {
 
 export interface formatedAddressesResponseType {
     "value": string,
-    "lon": string,
-    "lat": string,
+    "lon"?: string,
+    "lat"?: string,
 }
 
 export interface SelectSettings {

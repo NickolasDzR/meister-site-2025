@@ -6,7 +6,7 @@ import {
     SelectSettings,
     valueFormElementsTypes, WeightCategory
 } from "@types";
-import {YMAPLoader} from "@utils";
+import {buttonActiveHandler, YMAPLoader} from "@utils";
 import {YMapApiKey} from "../../../../ts/main";
 
 declare var ymaps: any;
@@ -78,6 +78,11 @@ const onChangedInput = async (input: HTMLInputElement) => {
         .map(obj => [obj.value, obj]) // Группируем по городу
     ).values()];
 
+    // Если у results.length > 0, то Задаем ей значение, что местоположение не найдено
+    if (!uniqueLocations.length) {
+        uniqueLocations.push({value: `Местоположение не найдено`});
+    }
+
     const parentInputBlock = input.closest(".input") as HTMLDivElement;
 
     if (parentInputBlock) {
@@ -86,28 +91,36 @@ const onChangedInput = async (input: HTMLInputElement) => {
         if (select) {
             const selectIndex = select.dataset['index']
 
-            if (results.length > 0) {
-                const options = select.querySelectorAll("option") as NodeListOf<HTMLOptionElement>;
+            const options = select.querySelectorAll("option") as NodeListOf<HTMLOptionElement>;
 
-                options.forEach(option => option.remove());
+            options.forEach(option => option.remove());
 
-                // ...New Set(results) нужен для удаления дублей из массива
-                Array.from(uniqueLocations, (location: formatedAddressesResponseType, i: number) => {
-                    const option = document.createElement("option") as HTMLOptionElement;
+            // ...New Set(results) нужен для удаления дублей из массива
+            Array.from(uniqueLocations, (location: formatedAddressesResponseType, i: number) => {
+                const option = document.createElement("option") as HTMLOptionElement;
+                option.value = `${i}`;
 
-                    option.value = `${i}`;
+                if (results.length) {
                     option.innerText = `${location["value"]}`;
                     option.dataset.lat = `${location["lat"]}`;
                     option.dataset.lon = `${location["lon"]}`;
+                } else {
+                    if ((parentInputBlock.querySelector(".nice-select-search") as HTMLInputElement).value.length) {
+                        option.innerText = `Местоположение не найдено`;
+                    } else {
+                        option.innerText = `Введите местоположение`;
+                    }
 
-                    select.insertAdjacentElement("beforeend", option);
-                });
-
-                oldInputValue = value;
-
-                if (niceSelectInstance) {
-                    niceSelectInstance[`${selectIndex}`].update();
+                    option.dataset["empty"] = "";
                 }
+
+                select.insertAdjacentElement("beforeend", option);
+            });
+
+            oldInputValue = value;
+
+            if (niceSelectInstance) {
+                niceSelectInstance[`${selectIndex}`].update();
             }
         } else {
             console.error("Элемент select не найден");
@@ -135,6 +148,8 @@ const onReadResultsDoneHandler = (event) => {
     }
 }
 
+const currentNumber = `+7 999 120 59 82`;
+
 /**
  *
  * @param distance
@@ -149,7 +164,7 @@ const textGenerationHandler = (distance: string): string => {
             </p>
             <p class="cargo-calc__delivery-results-text">
                 Для более точного расчёта стоимости рейса позвоните нашему менеджеру по телефону 
-                <span style="white-space: nowrap">+7 999 120 59 82</span>, 
+                <span style="white-space: nowrap">${currentNumber}</span>, 
                 поскольку нужны дополнительные данные о характере груза.
             </p>
         `
@@ -162,7 +177,7 @@ const textGenerationHandler = (distance: string): string => {
                 Возможно, выбранный маршрут временно недоступен либо произошла техническая ошибка.
                 
                 Рекомендуем связаться с нашими специалистами по указанному телефону для уточнения деталей расчета.
-                <span style="white-space: nowrap">+7 999 120 59 82</span>
+                <span style="white-space: nowrap">${currentNumber}</span>
             </p>
         `
     }
@@ -222,7 +237,7 @@ const formEventHandler = (event) => {
             // Передаём данные в обработчик результатов и показываем пользователю
             text = String(Math.round(costPerKm * distance));
         }
-    // Если у нас ошибка в возвращаемом значении дистации между точками
+        // Если у нас ошибка в возвращаемом значении дистации между точками
     } else {
         text = undefined;
     }
@@ -292,6 +307,7 @@ const getFormValues = (form: HTMLFormElement): valueFormElementsTypes | undefine
                         if (formElement["name"] && formElement["value"]) {
                             valueFormElements[`${formElement["name"]}`] = formElement.value;
                         } else {
+                            // inputEventHandler(form)
                             console.error(formElement["name"] ? "Отсутствует значение в инпуте, заполните инпут" : "У инпута должно быть name")
                         }
                     }
@@ -311,6 +327,7 @@ const getFormValues = (form: HTMLFormElement): valueFormElementsTypes | undefine
                                     valueFormElements[`${formElement["name"]}`] = [Number(lat), Number(lon)] as [number, number];
                                 }
                             } else {
+                                // inputEventHandler(form)
                                 console.error("data-lan, data-lat - отсутвует один или оба этих значения");
                             }
                         } else {
@@ -339,11 +356,17 @@ const newSelectSettings: SelectSettings = {
     searchable: true,
     placeholder: 'Напишите город',
     onSearchInputChanged: (input) => {
-        if (debounceInputChange) clearTimeout(debounceInputChange);
-
-        debounceInputChange = setTimeout(onChangedInput, 300, input);
+        // if (debounceInputChange) clearTimeout(debounceInputChange);
+        // debounceInputChange = setTimeout(onChangedInput, 300, input);
+        return onChangedInput(input)
     },
     afterUpdated: (dropdown) => {
+        // if (debounceInputChange) clearTimeout(debounceInputChange);
+        //
+        // debounceInputChange = setTimeout(() => {
+        //
+        // }, 300);
+
         const currentInput = dropdown.querySelector(".nice-select-search") as HTMLSelectElement;
 
         currentInput.value = oldInputValue;
@@ -432,7 +455,7 @@ const getCargoFormInputValuesHandler = async (button: HTMLButtonElement) => {
         // });
 
 
-            // await YMAPLoader(YMapApiKey)
+        // await YMAPLoader(YMapApiKey)
         //
         //     // const setYMAPDownloadInterval = undefined as undefined | ReturnType<typeof setTimeout>;
         //
@@ -451,6 +474,13 @@ const getCargoFormInputValuesHandler = async (button: HTMLButtonElement) => {
 
 cargoCalcButton.addEventListener("click", async (event) => {
     event.preventDefault();
+
+    const button = event.target as HTMLButtonElement
+
+    if (button && button.tagName === "BUTTON") {
+        buttonActiveHandler.disable(button);
+    }
+
 
     await YMAPLoader(YMapApiKey);
 
