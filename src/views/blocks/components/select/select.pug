@@ -8,4 +8,4 @@ mixin select(value = false)
         +e.SELECT.placeholder.input__placeholder_select(name=value["name"])
             each option, index in value['options']
                 +e.option(value=index data-select=option)
-        +e.LABEL.label(data-title=value['options'][0])
+        +e.LABEL.label(data-title=value['options'][0] data-error=value['error'])

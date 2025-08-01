@@ -113,6 +113,8 @@ NiceSelect.prototype.create = function () {
     this.el.style.padding = "0";
     this.el.style.height = "0";
     this.el.style.fontSize = "0";
+    this.el.style.position = "absolute";
+
     if (this.data) {
         this.processData(this.data);
     } else {
@@ -351,11 +353,16 @@ NiceSelect.prototype._bindSearchEvent = function () {
             return false;
         });
     }
-
     searchBox.addEventListener("input", this._onSearchChanged.bind(this));
 };
 
 NiceSelect.prototype._onClicked = function (e) {
+    if (this.config.onClickedSelect && typeof this.config.onClickedSelect === 'function') {
+        if (this.dropdown) {
+            this.config.onClickedSelect(this.dropdown);
+        }
+    }
+
     e.preventDefault();
     if (!hasClass(this.dropdown, "open")) {
         addClass(this.dropdown, "open");

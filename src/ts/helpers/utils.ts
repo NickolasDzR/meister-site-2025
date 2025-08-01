@@ -49,9 +49,27 @@ export const inputEventHandler = (form: HTMLElement) => {
 
 export const buttonActiveHandler = {
     disable: (button: HTMLButtonElement) => {
-
+        if (button) {
+            button.disabled = true;
+        } else {
+            console.error("Нужно передать кнопку <button></button> в обработчик")
+        }
     },
     enable: (button: HTMLButtonElement) => {
-
+        if (button) {
+            button.disabled = false;
+        } else {
+            console.error("Нужно передать кнопку <button></button> в обработчик")
+        }
     }
 }
+
+// TODO Сделать нормальный валидатор, чтобы валидировался отсюда, а не из кода. И не просто класс наставлял
+export const inputErrorHandler = (input: HTMLInputElement | HTMLDivElement) => {
+    if (input) {
+        input.classList.add("error");
+
+    } else {
+        console.error("Для обработки инпута на ошибки в функцию нужно передать input")
+    }
+};

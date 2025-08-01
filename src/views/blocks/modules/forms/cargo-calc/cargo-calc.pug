@@ -17,18 +17,21 @@ mixin cargoCalc(value = false)
                     +e.content
                         +select({
                             options: ['Выберете место загрузки'],
+                            error: 'Введите значение',
                             parentClass: 'cargo-calc__input',
                             icon: 'location',
                             name: 'location_0'
                         })
                         +select({
                             options: ['Выберете место выгрузки'],
+                            error: 'Введите значение',
                             parentClass: 'cargo-calc__input',
                             icon: 'location',
                             name: 'location_1'
                         })
                         +input({
                             placeholder: 'Тоннаж',
+                            error: 'Введите значение',
                             class: 'cargo-calc__input',
                             placeholderClass: 'cargo-calc__placeholder',
                             icon: 'weight',

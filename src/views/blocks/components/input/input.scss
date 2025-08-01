@@ -19,16 +19,17 @@
     }
     
     &__placeholder {
-        padding: 10px 34px;
+        padding: 8px 32px;
+        border: 2px solid white;
         border-radius: 5px;
-        border: none;
         outline: none;
         font-size: 16px;
         line-height: 1.6;
         color: $black;
+        transition: all .3s ease;
 
         @media (min-width: $break_md) {
-            padding: 19px 51px 15px;
+            padding: 17px 49px 13px;
         }
 
         &::placeholder {
@@ -40,6 +41,10 @@
         &_select {
             height: auto;
             width: 100%;
+        }
+
+        &.error {
+            border: 2px solid $red;
         }
     }
     
@@ -86,9 +91,13 @@
     // Если есть выбранный option у селект
     &:has(.nice-select .option.selected) .input__label::before,
     // Если произошёл фокус на инпут
-    &:not(.input_select) .input__placeholder:focus ~ .input__label::before,
+    &:not(.input_select) .input__placeholder:not(.error):focus ~ .input__label::before,
     // Если в инпуте есть хоть один символ
-    &:not(.input_select) input.valid ~ .input__label::before {
+    &:not(.input_select) input.valid ~ .input__label::before,
+    // Если при валидации формы селект или инпут пустой
+    // Ниже продолжение кода, который меняет bg на красный
+    & .nice-select.error ~ .input__label::before,
+    .input__placeholder.error ~ .input__label::before {
         color: $white;
         background-color: $keppel;
         font-size: 9px;
@@ -105,6 +114,12 @@
         }
     }
 
+    & .nice-select.error ~ .input__label::before,
+    .input__placeholder.error ~ .input__label::before {
+        background-color: $red;
+        content: attr(data-error);
+    }
+
     &:has(.nice-select .option.selected) {
         .nice-select .current {
             color: $black;
@@ -115,6 +130,12 @@
     &:has(.nice-select .option.selected) .input__icon,
     &:not(.input_select) input.valid ~ .input__icon {
         fill: $keppel;
+    }
+
+    &:has(.input__placeholder.error) {
+        .input__icon {
+            fill: $red;
+        }
     }
 }
 
@@ -129,6 +150,12 @@
 
     .nice-select-dropdown {
         box-shadow: 0 4px 10px 7px rgba(0, 0, 0, 0.4);
+        margin-left: -2px;
+        width: calc(100% + 4px);
+    }
+
+    &.open, &:active, &:focus {
+        border-color: $white;
     }
 
     .current {

@@ -6,7 +6,7 @@ import {
     SelectSettings,
     valueFormElementsTypes, WeightCategory
 } from "@types";
-import {buttonActiveHandler, YMAPLoader} from "@utils";
+import {buttonActiveHandler, inputErrorHandler, YMAPLoader} from "@utils";
 import {YMapApiKey} from "../../../../ts/main";
 
 declare var ymaps: any;
@@ -73,9 +73,9 @@ const onChangedInput = async (input: HTMLInputElement) => {
     });
 
     // Удаляем пустые (null) значения и дубли
-    const uniqueLocations = [...new Map(results
-        .filter(({value}) => value != null)
-        .map(obj => [obj.value, obj]) // Группируем по городу
+    const uniqueLocations = [...new Map(
+        results.filter(({ value, lon, lat }) => value && lon && lat)
+        .map(obj => [obj.value, obj])
     ).values()];
 
     // Если у results.length > 0, то Задаем ей значение, что местоположение не найдено
@@ -196,6 +196,13 @@ const showUserResults = (deliveryCosts: string | undefined, form: HTMLFormElemen
     } else {
 
     }
+
+    // Удаляем disabled с кнопки
+    const button = form.querySelector(".cargo-calc__button") as HTMLButtonElement
+
+    if (button && button.tagName === "BUTTON") {
+        buttonActiveHandler.enable(button);
+    }
 }
 
 const deliveryCosts: Record<WeightCategory, DeliveryCostConfig> = {
@@ -288,7 +295,6 @@ const costCalculator = (coord: [number, number], form: HTMLFormElement) => {
 }
 
 const getFormValues = (form: HTMLFormElement): valueFormElementsTypes | undefined | {} => {
-
     if (form && form.tagName === "FORM") {
         // Оставляем только нужное. Лишнее в виде элементов библии Nice-select2 убираем
         let formElements =
@@ -307,15 +313,13 @@ const getFormValues = (form: HTMLFormElement): valueFormElementsTypes | undefine
                         if (formElement["name"] && formElement["value"]) {
                             valueFormElements[`${formElement["name"]}`] = formElement.value;
                         } else {
-                            // inputEventHandler(form)
-                            console.error(formElement["name"] ? "Отсутствует значение в инпуте, заполните инпут" : "У инпута должно быть name")
+                            inputErrorHandler(formElement as HTMLInputElement);
                         }
                     }
                 } else if (formElement.tagName === "SELECT") {
                     const dropdown = formElement.nextElementSibling as HTMLDivElement;
 
                     if (dropdown) {
-
                         const parentSelect = dropdown.closest(".cargo-calc__input") as HTMLDivElement;
 
                         if (parentSelect) {
@@ -327,8 +331,7 @@ const getFormValues = (form: HTMLFormElement): valueFormElementsTypes | undefine
                                     valueFormElements[`${formElement["name"]}`] = [Number(lat), Number(lon)] as [number, number];
                                 }
                             } else {
-                                // inputEventHandler(form)
-                                console.error("data-lan, data-lat - отсутвует один или оба этих значения");
+                                inputErrorHandler(formElement.nextElementSibling as HTMLDivElement);
                             }
                         } else {
                             console.error("Элемент с классом .cargo-calc__input не найден")
@@ -381,6 +384,13 @@ const newSelectSettings: SelectSettings = {
                 const parentSelect = item.closest(".cargo-calc__input") as HTMLDivElement;
 
                 if (parentSelect) {
+                    const erroredElement = parentSelect.querySelector(".input__placeholder.error") as HTMLDivElement;
+
+                    // Удаляем error класс
+                    if (erroredElement) {
+                        erroredElement.classList.remove("error");
+                    }
+
                     const currentOption = parentSelect.querySelector(`option[value='${itemIndex}']`) as HTMLOptionElement
 
                     if (currentOption) {
@@ -405,7 +415,26 @@ const newSelectSettings: SelectSettings = {
         } else {
             console.error("Выбранный элемент не найден")
         }
+    },
+    onClickedSelect: (dropdown) => {
+        if (dropdown.classList.contains("error")) {
+            dropdown.classList.remove("error");
 
+            const form = dropdown.closest(".cargo-calc__form") as HTMLFormElement;
+
+                // Удаляем disabled с кнопки, если она есть
+                if (form) {
+                    const button = form.querySelector(".cargo-calc__button") as HTMLButtonElement;
+
+                    if (button) {
+                        button.disabled = false;
+                    } else {
+                        console.error("Кнопка формы не найдена")
+                    }
+                } else {
+                    console.error("Не смог найти родителя тег form")
+            }
+        }
     }
 }
 
@@ -445,28 +474,6 @@ const getCargoFormInputValuesHandler = async (button: HTMLButtonElement) => {
         } else {
             console.error("Отсутствует одно из значений для просчёта стоимости рейса")
         }
-
-        // ymaps.ready(() => {
-        //     if (multiRoute) {
-        //         multiRoute.setReferencePoints([valueFormElements["location_0"], valueFormElements["location_1"]]);
-        //     } else {
-        //         costCalculator([valueFormElements["location_0"], valueFormElements["location_1"]])
-        //     }
-        // });
-
-
-        // await YMAPLoader(YMapApiKey)
-        //
-        //     // const setYMAPDownloadInterval = undefined as undefined | ReturnType<typeof setTimeout>;
-        //
-        //     ymaps.ready(() => {
-        //         if (multiRoute) {
-        //             multiRoute.setReferencePoints([valueFormElements["location_0"], valueFormElements["location_1"]]);
-        //         } else {
-        //             costCalculator([valueFormElements["location_0"], valueFormElements["location_1"]])
-        //         }
-        //     });
-
     } else {
         console.error("Кнопка не найдена")
     }
@@ -480,7 +487,6 @@ cargoCalcButton.addEventListener("click", async (event) => {
     if (button && button.tagName === "BUTTON") {
         buttonActiveHandler.disable(button);
     }
-
 
     await YMAPLoader(YMapApiKey);
 

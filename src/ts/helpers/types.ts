@@ -80,6 +80,12 @@ export interface SelectSettings {
      * @param item
      */
     onClickedItem?: (item: HTMLLIElement) => void;
+
+    /**
+     * Когда открыли dropdown
+     * @param dropdown
+     */
+    onClickedSelect?: (dropdown: Element) => void;
 }
 
 export interface valueFormElementsTypes {
