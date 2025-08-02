@@ -6,7 +6,7 @@ import {
     SelectSettings,
     valueFormElementsTypes, WeightCategory
 } from "@types";
-import {buttonActiveHandler, inputErrorHandler, YMAPLoader} from "@utils";
+import {buttonActiveHandler, inputErrorHandler, preloader, YMAPLoader} from "@utils";
 import {YMapApiKey} from "../../../../ts/main";
 
 declare var ymaps: any;
@@ -117,9 +117,9 @@ const onChangedInput = async (input: HTMLInputElement) => {
                 select.insertAdjacentElement("beforeend", option);
             });
 
-            oldInputValue = value;
-
             if (niceSelectInstance) {
+                (input.closest(".cargo-calc__input") as HTMLDivElement).dataset.oldValue = input.value;
+
                 niceSelectInstance[`${selectIndex}`].update();
             }
         } else {
@@ -203,6 +203,8 @@ const showUserResults = (deliveryCosts: string | undefined, form: HTMLFormElemen
     if (button && button.tagName === "BUTTON") {
         buttonActiveHandler.enable(button);
     }
+
+    preloader.disable();
 }
 
 const deliveryCosts: Record<WeightCategory, DeliveryCostConfig> = {
@@ -357,24 +359,24 @@ let debounceInputChange = undefined as undefined | ReturnType<typeof setTimeout>
 
 const newSelectSettings: SelectSettings = {
     searchable: true,
-    placeholder: 'Напишите город',
+    searchtext: 'Напишите город',
     onSearchInputChanged: (input) => {
-        // if (debounceInputChange) clearTimeout(debounceInputChange);
-        // debounceInputChange = setTimeout(onChangedInput, 300, input);
-        return onChangedInput(input)
+        if (debounceInputChange) clearTimeout(debounceInputChange);
+        debounceInputChange = setTimeout(onChangedInput, 700, input);
     },
     afterUpdated: (dropdown) => {
-        // if (debounceInputChange) clearTimeout(debounceInputChange);
-        //
-        // debounceInputChange = setTimeout(() => {
-        //
-        // }, 300);
-
         const currentInput = dropdown.querySelector(".nice-select-search") as HTMLSelectElement;
 
-        currentInput.value = oldInputValue;
+        if (currentInput) {
+            const cargoCalcInput = currentInput.closest(".cargo-calc__input") as HTMLInputElement;
+            const oldInputValue = cargoCalcInput.dataset.oldValue;
 
-        oldInputValue = "";
+            if (oldInputValue) {
+                currentInput.value = oldInputValue;
+
+                cargoCalcInput.dataset.oldValue = "";
+            }
+        }
     },
     onClickedItem: (item) => {
         if (item) {
@@ -484,16 +486,14 @@ cargoCalcButton.addEventListener("click", async (event) => {
 
     const button = event.target as HTMLButtonElement
 
+    // TODO тут сделать прелоадер в качестве логотипа, у которого дорога едет, пока грузится карта. На всяк
+    preloader.enable();
+
     if (button && button.tagName === "BUTTON") {
         buttonActiveHandler.disable(button);
     }
 
     await YMAPLoader(YMapApiKey);
-
-    // TODO тут сделать прелоадер в качестве логотипа, у которого дорога едет, пока грузится карта. На всяк
-    // const onPreloadMap = () => {
-    //     turn on preload
-    // }
 
     getCargoFormInputValuesHandler(event.target as HTMLButtonElement);
 })

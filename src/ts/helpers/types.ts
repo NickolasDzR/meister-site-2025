@@ -61,7 +61,7 @@ export interface SelectSettings {
     searchable: boolean;
 
     /** Подсказывающий текст-плейсхолдер для поля поиска */
-    placeholder: string;
+    searchtext: string;
 
     /**
      * Колбэк-функция, вызываемая при изменении значения поля поиска.

@@ -239,7 +239,9 @@ NiceSelect.prototype._renderSelectedItems = function () {
 NiceSelect.prototype._renderItems = function () {
     var ul = this.dropdown.querySelector("ul");
     this.options.forEach(item => {
-        ul.appendChild(this._renderItem(item));
+        if (this._renderItem(item).textContent.length) {
+            ul.appendChild(this._renderItem(item));
+        }
     });
 };
 

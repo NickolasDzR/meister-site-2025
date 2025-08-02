@@ -177,6 +177,9 @@
     }
 
     .list {
+        &:has(li) {
+            padding-bottom: 4px;
+        }
 
         li {
             position: relative;

@@ -73,3 +73,46 @@ export const inputErrorHandler = (input: HTMLInputElement | HTMLDivElement) => {
         console.error("Для обработки инпута на ошибки в функцию нужно передать input")
     }
 };
+
+/**
+ *
+ * @param element - элемент в котором нужно вывести прелоадер (показать загрузку)
+ */
+export const preloader = {
+    enable: (preloaderText?: string) => {
+        const preloader = document.createElement("DIV");
+        preloader.classList.add("preloader");
+
+        const preloaderWrapper = document.createElement("DIV");
+        preloaderWrapper.classList.add("preloader__wrapper");
+
+        if (preloaderText) {
+            preloaderWrapper.dataset.preloaderText = `${preloaderText}`;
+        } else {
+            preloaderWrapper.dataset.preloaderText = `Идёт загрузка`;
+        }
+
+        preloader.appendChild(preloaderWrapper);
+
+        document.body.appendChild(preloader);
+
+        setTimeout(() => {
+            preloader.classList.add("active");
+        }, 10)
+    },
+    disable: () => {
+        const preloader = document.querySelector(".preloader");
+
+        if (preloader) {
+            preloader.addEventListener("transitionend", () => {
+                setTimeout(() => {
+                    preloader.remove();
+                }, 100)
+            }, {once: true});
+
+            preloader.classList.remove("active");
+        } else {
+            console.error("Прелоадер не найден")
+        }
+    },
+}
