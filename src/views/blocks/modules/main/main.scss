@@ -1,6 +1,8 @@
 .main {
     &__cargo-calc-button {
         width: 100%;
+        padding-top: 20px;
+        padding-bottom: 20px;
 
         @media (min-width: $break_md) {
             position: fixed;

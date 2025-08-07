@@ -64,13 +64,11 @@ module.exports = {
                 }],
             },
             {
-                test: /\.(woff(2)?|ttf|otf|eot|svg)$/,
+                test: /\.woff$/,
                 type: 'asset/resource',
-                include: /assets\/fonts|node_modules/, // fonts from `assets/fonts` or `node_modules` directory only
                 generator: {
-                    // generates filename including last directory name to group fonts by name
-                    filename: (pathData) => `fonts/${path.basename(
-                        path.dirname(pathData.filename))}/[name][ext][query]`,
+                    // keep original filenames and copy images to `dist/img/`
+                    filename: 'fonts/[name].[ext]',
                 },
             },
             {
