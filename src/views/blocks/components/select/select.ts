@@ -150,52 +150,75 @@ const onReadResultsDoneHandler = (event) => {
 
 const currentNumber = `+7 999 120 59 82`;
 
+type DeliveryStatus = 'valid' | 'invalid_weight' | 'calculation_error';
+
 /**
  *
- * @param distance
+ * @param cost - диста
+ * @param status - статус сообщения
  */
-const textGenerationHandler = (distance: string): string => {
-    if (distance) {
-        return `
-            <p class="cargo-calc__delivery-results-text">
-                Стоимость рейса составит примерно 
-                <span class="cargo-calc__delivery-results-text-cost">${distance}</span> 
-                рублей.
-            </p>
-            <p class="cargo-calc__delivery-results-text">
-                Для более точного расчёта стоимости рейса позвоните нашему менеджеру по телефону 
-                <span style="white-space: nowrap">${currentNumber}</span>, 
-                поскольку нужны дополнительные данные о характере груза.
-            </p>
-        `
-    } else {
-        return `
-            <p class="cargo-calc__delivery-results-text">
-                К сожалению, не удалось рассчитать стоимость рейса.
-            </p>
-            <p class="cargo-calc__delivery-results-text">
-                Возможно, выбранный маршрут временно недоступен либо произошла техническая ошибка.
-                
-                Рекомендуем связаться с нашими специалистами по указанному телефону для уточнения деталей расчета.
-                <span style="white-space: nowrap">${currentNumber}</span>
-            </p>
-        `
+const textGenerationHandler = (cost: string, status: DeliveryStatus): string => {
+    switch (status) {
+        case 'valid':
+            return `
+                <p class="cargo-calc__delivery-results-text">
+                    Стоимость рейса составит примерно 
+                    <span class="cargo-calc__delivery-results-text-cost">${cost}</span> 
+                    рублей.
+                </p>
+                <p class="cargo-calc__delivery-results-text">
+                    Для более точного расчёта стоимости рейса позвоните нашему менеджеру по телефону 
+                    <span style="white-space: nowrap">${currentNumber}</span>, 
+                    поскольку нужны дополнительные данные о характере груза.
+                </p>
+            `
+            break
+        case 'invalid_weight':
+            // Вес вне допустимого диапазона
+            return `
+                <p class="cargo-calc__delivery-results-text">
+                    Вес ${cost} тонн вне допустимого диапазона.
+                </p>
+                <p class="cargo-calc__delivery-results-text">
+                    Пожалуйста, проверьте введённые значения и попробуйте снова.
+                </p>
+            `;
+            break
+        case "calculation_error":
+            return `
+                <p class="cargo-calc__delivery-results-text">
+                    К сожалению, не удалось рассчитать стоимость рейса.
+                </p>
+                <p class="cargo-calc__delivery-results-text">
+                    Возможно, выбранный маршрут временно недоступен, либо произошла техническая ошибка.
+                    
+                    Рекомендуем связаться с нашими специалистами по телефону
+                    <span style="white-space: nowrap">${currentNumber}</span> 
+                    для уточнения деталей расчета.
+                </p>
+            `
+            break;
+
     }
 }
 
-const showUserResults = (deliveryCosts: string | undefined, form: HTMLFormElement) => {
+const showUserResults = (status: string, deliveryCosts: string | number | undefined, form: HTMLFormElement) => {
     const formParent = form.closest(".cargo-calc") as HTMLDivElement;
     const costTextWrapper = formParent.querySelector(".cargo-calc__delivery-results-wrapper") as HTMLSpanElement;
 
-    if (deliveryCosts || typeof deliveryCosts !== 'string') {
-        if (costTextWrapper) {
-            costTextWrapper.insertAdjacentHTML('afterbegin', textGenerationHandler(deliveryCosts as string))
-
-            formParent.classList.add("cost-calculated");
-        }
-    } else {
-
+    switch (status) {
+        case "valid":
+            costTextWrapper.insertAdjacentHTML('afterbegin', textGenerationHandler(deliveryCosts as string, "valid"))
+            break;
+        case "invalid_weight":
+            costTextWrapper.insertAdjacentHTML('afterbegin', textGenerationHandler(deliveryCosts as string, "invalid_weight"))
+            break;
+        case "calculation_error":
+            costTextWrapper.insertAdjacentHTML('afterbegin', textGenerationHandler(deliveryCosts as string, "calculation_error"))
+            break;
     }
+
+    formParent.classList.add("cost-calculated");
 
     // Удаляем disabled с кнопки
     const button = form.querySelector(".cargo-calc__button") as HTMLButtonElement
@@ -226,6 +249,8 @@ const formEventHandler = (event) => {
             const cargoWeight = +cargoWeightInput.value as number;
             let category: WeightCategory;
 
+            console.log(distance);
+
             // Определяем категорию груза по весу
             if (cargoWeight >= deliveryCosts.upTo2Tons.minWeight && cargoWeight <= deliveryCosts.upTo2Tons.maxWeight) {
                 category = 'upTo2Tons';
@@ -236,7 +261,7 @@ const formEventHandler = (event) => {
             } else if (cargoWeight >= deliveryCosts.from10to20Tons.minWeight && cargoWeight <= deliveryCosts.from10to20Tons.maxWeight) {
                 category = 'from10to20Tons';
             } else {
-                console.error(`Вес ${cargoWeight} тонн вне допустимого диапазона.`);
+                showUserResults("invalid_weight", cargoWeight, form)
                 return false;
             }
 
@@ -244,14 +269,16 @@ const formEventHandler = (event) => {
             const costPerKm = deliveryCosts[category].costPerKm as number;
 
             // Передаём данные в обработчик результатов и показываем пользователю
-            text = String(Math.round(costPerKm * distance));
+            text = String(Math.round((costPerKm * distance) / 1000)*1000);
         }
-        // Если у нас ошибка в возвращаемом значении дистации между точками
+        // Если у нас ошибка в возвращаемом значении дистации между точками2
     } else {
         text = undefined;
     }
 
-    showUserResults(text, form);
+    console.log(text);
+
+    showUserResults(text ? "valid" : "calculation_error", text, form);
 };
 
 let multiRoute: any;

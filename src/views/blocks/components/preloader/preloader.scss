@@ -14,6 +14,8 @@
     z-index: 999;
     opacity: 0;
     transition: opacity 0.3s ease;
+    padding-left: 15px;
+    padding-right: 15px;
 
     &.active {
         opacity: 1;
@@ -32,7 +34,7 @@
 
     &__wrapper {
         width: fit-content;
-        font-size: 40px;
+        font-size: 32px;
         font-family: system-ui, sans-serif;
         font-weight: bold;
         text-transform: uppercase;
@@ -41,6 +43,10 @@
         background: conic-gradient($keppel 0 0) 50%/0 100% no-repeat text;
         animation: l4 1.5s linear infinite;
         z-index: 999;
+
+        @media (min-width: $break_md) {
+            font-size: 40px
+        }
 
         &:before {
             content: attr(data-preloader-text);

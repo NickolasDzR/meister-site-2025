@@ -19,7 +19,7 @@
     }
     
     &__placeholder {
-        padding: 8px 32px;
+        padding: 12px 32px;
         border: 2px solid white;
         border-radius: 5px;
         outline: none;
@@ -74,12 +74,13 @@
         &::before {
             content: attr(data-title);
             position: absolute;
-            top: 10px;
-            left: 35px;
+            top: 14px;
+            left: 34px;
             font-size: 16px;
             line-height: 1.6;
             color: $gray;
             transition: all .3s ease;
+            font-weight: 300;
 
             @media (min-width: $break_md) {
                 top: 18px;
@@ -103,7 +104,7 @@
         font-size: 9px;
         border-radius: 5px;
         padding: 2px 7px 1px;
-        transform: translate3D(-23px, -19px, 0);
+        transform: translate3D(-23px, -24px, 0);
 
         .nice-select:after {
             border-color: $keppel;
@@ -111,6 +112,7 @@
 
         @media (min-width: $break_md) {
             transform: translate3D(-29px, -29px, 0);
+            font-size: 12px;
         }
     }
 
@@ -159,6 +161,8 @@
     }
 
     .current {
+        font-family: $second-family;
+        font-weight: 300;
         color: transparent;
         transition-delay: .2s;
         text-overflow: ellipsis;
@@ -174,6 +178,7 @@
         line-height: 1.4;
         padding-left: 15px;
         padding-right: 15px;
+        font-weight: 300;
     }
 
     .list {
@@ -183,8 +188,8 @@
 
         li {
             position: relative;
-            padding-top: 5px;
-            padding-bottom: 5px;
+            padding-top: 11px;
+            padding-bottom: 11px;
         }
         
         li + li {
@@ -199,5 +204,16 @@
                 opacity: 0.1;
             }
         }
+    }
+
+    & .nice-select-search {
+        min-height: 44px;
+        font-size: 16px;
+    }
+
+    & .nice-select-search::placeholder {
+        font-family: $font-family;
+        font-weight: 300;
+        font-size: 16px
     }
 }

@@ -69,6 +69,7 @@ export const inputErrorHandler = (input: HTMLInputElement | HTMLDivElement) => {
     if (input) {
         input.classList.add("error");
 
+        preloader.disable();
     } else {
         console.error("Для обработки инпута на ошибки в функцию нужно передать input")
     }

@@ -1,9 +1,9 @@
 .main-slider {
-    height: calc(100vh - 157px);
+    height: calc(100vh - 163px);
     overflow-y: hidden;
 
     @media (min-width: $break_md) {
-        height: calc(100vh - 111px);
+        height: calc(100vh - 110px);
     }
 
     &__slider {

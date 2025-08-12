@@ -35,6 +35,11 @@
         transform: translateX(0);
     }
 
+    &__form-wrapper {
+        width: 100%;
+        max-width: 100%;
+    }
+
     &.cost-calculated {
         .cargo-calc__delivery-results {
             opacity: 1;
@@ -117,10 +122,6 @@
 
         > * + * {
             margin-top: 20px;
-
-            @media (min-width: $break_md) {
-                margin-top: 35px;
-            }
         }
     }
 
@@ -164,9 +165,10 @@
     }
 
     &__delivery-results-text-cost {
+        font-family: $second-family;
         font-size: inherit;
+        font-weight: bold;
         line-height: inherit;
         color: inherit;
-        font-weight: bold;
     }
 }
