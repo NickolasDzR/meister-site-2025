@@ -1,5 +1,6 @@
 @import 'helpers/variables';
 @import 'helpers/reset';
+@import 'base/font';
 @import 'base/global';
 @import 'helpers/grid';
 
@@ -21,4 +22,5 @@
 
 
 // Стили страницы posts
-@import '../views/blocks/modules/post-head/post-head';
+//@import '../views/blocks/modules/post-head/post-head';
+@import '../views/blocks/modules/post-list/post-list';

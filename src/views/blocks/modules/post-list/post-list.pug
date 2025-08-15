@@ -1,0 +1,14 @@
+mixin postList(val = false)
+    +b.UL.post-list
+        each post in val
+            +e.LI.item
+                +e.A.link(href=post["link"])
+                    +picture({
+                        name: post["images"]["tablet"],
+                        class: "image"
+                    })
+                    +e.P.title._top= post["title"]
+                    +e.DIV.title-inner
+                        +e.DIV.title-wrapper
+                            +e.P.title= post["title"]
+                            +e.P.subtitle= post["subtitle"]

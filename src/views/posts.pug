@@ -10,7 +10,7 @@ include blocks/modules/logo/logo
 include blocks/modules/soc/soc
 include blocks/modules/contacts/contacts
 
-include blocks/modules/post-head/post-head
+include blocks/modules/post-list/post-list
 
 block variables
     -
@@ -18,21 +18,57 @@ block variables
             nav = [{link: '#', text: "Новости"}, {link: '#', text: "Расчитать доставку"}, {link: '#', text: "Контакты"}]
             soc = [{link: '#', name: 'ws'}, {link: '#', name: 'tg'}, {link: '#', name: 'vk'}]
             contacts = [{title: '+7 (999) 120 59 82', titleLink: '#', subtitle: 'nickolasdzr@yandex.ru', subtitleLink: '#'}]
-            postHeadImages = {
-                images: {
-                    "mobile": "/post-head/post-head",
-                    "tablet": "/post-head/post-head-tab",
-                    "desktop": "/post-head/post-head-desk"
+            posts = [
+                {
+                    images: {
+                        "tablet": "/post-head/post-head",
+                    },
+                    title: "Обманчивый штиль: как меняются ставки на автоперевозки в середине лета",
+                    subtitle: "Рассказываем, на каких направлениях тарифы в июле изменились сильнее всего",
+                    link: "#",
                 },
-                title: "От гибридного «Урала» до нового российского пикапа: что показали на выставке «Иннопром»",
-            }
+                {
+                    images: {
+                        "tablet": "/post-head/post-head",
+                    },
+                    title: "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, contur",
+                    subtitle: "fugiat nulla pariatur. Excepteur sint occaecat cupidatat asdasdasdasd",
+                    link: "#",
+                },
+                {
+                    images: {
+                        "tablet": "/post-head/post-head",
+                    },
+                    title: "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, contur",
+                    subtitle: "fugiat nulla pariatur. Excepteur sint occaecat cupidatat asdasdasdasd",
+                    link: "#",
+                },
+                {
+                    images: {
+                        "tablet": "/post-head/post-head",
+                    },
+                    title: "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, contur",
+                    subtitle: "fugiat nulla pariatur. Excepteur sint occaecat cupidatat asdasdasdasd",
+                    link: "#",
+                },
+                {
+                    images: {
+                        "tablet": "/post-head/post-head",
+                    },
+                    title: "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, contur",
+                    subtitle: "fugiat nulla pariatur. Excepteur sint occaecat cupidatat asdasdasdasd",
+                    link: "#",
+                },
+            ]
 
 
 block content
     include ../../node_modules/bemto.pug/bemto.pug
     +header()
     +b.MAIN
-        +postHead(postHeadImages)
+        //+postHead(postHeadImages)
+        +postList(posts)
+
 
 block scripts
     script(src='../ts/main.ts')
