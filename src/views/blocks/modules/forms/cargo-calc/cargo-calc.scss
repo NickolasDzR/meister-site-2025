@@ -4,8 +4,6 @@
     right: 0;
     bottom: 0;
     left: 0;
-    backdrop-filter: blur(8px);
-    background: rgba(31, 66, 93, 0.6);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -22,8 +20,35 @@
         padding-left: 144px;
     }
 
+    &::before {
+        content: "";
+        width: 100%;
+        height: 100%;
+        display: block;
+        position: absolute;
+        inset: 0;
+        backdrop-filter: blur(8px);
+        background: rgba(31, 66, 93, 0.6);
+    }
+
     &.active {
         transform: translateX(0);
+    }
+
+    &__form-wrapper {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    &.cost-calculated {
+        .cargo-calc__delivery-results {
+            opacity: 1;
+        }
+
+        .cargo-calc__form {
+            z-index: -1;
+            opacity: 0.4;
+        }
     }
 
     &__title {
@@ -33,13 +58,15 @@
         text-transform: uppercase;
         margin-bottom: 35px;
         text-align: center;
+        z-index: 1;
+        position: relative;
 
         @media (min-width: $break_md) {
             font-size: 36px;
         }
     }
 
-    &__button {
+    &__button, &__button-results {
         font-size: 16px;
         border-radius: 5px;
         width: 100%;
@@ -59,6 +86,22 @@
         background-color: $white;
     }
 
+    // Логика:
+    // Если в инпуте есть option со значением data-empty
+    // Значит местоположение не найдено, и li
+    // который генерирует nice-select нужно сделать
+    // Не кликабельным
+
+    // Расшифровка:
+    // Если в родителе мы находим селект с классном, внутри которого
+    // Есть элемент с data-empty, то присваиваем
+    // Элементу списка, который находится в nice-select .list нужный стиль
+    &__input:has(.input__placeholder_select [data-empty]) {
+        .nice-select .list li {
+            pointer-events: none;
+        }
+    }
+
     &__input, &__placeholder {
         width: 100%;
 
@@ -75,22 +118,57 @@
         align-items: center;
         justify-content: center;
         flex-direction: column;
+        position: relative;
 
         > * + * {
             margin-top: 20px;
-
-            @media (min-width: $break_md) {
-                margin-top: 35px;
-            }
         }
     }
 
     &__form {
+        position: relative;
+        transition: all .3s ease;
+    }
+
+    &__form-inner, &__wrapper {
         max-width: 100%;
         width: 100%;
+        position: relative;
 
         @media (min-width: $break_xl) {
             max-width: 314px;
         }
+    }
+
+    &__delivery-results {
+        position: absolute;
+        inset: 0;
+        max-width: 314px;
+        left: auto;
+        right: auto;
+        top: auto;
+        bottom: auto;
+        opacity: 0;
+        transition: all .3s ease;
+    }
+
+    &__delivery-results-text {
+        font-size: 16px;
+        font-weight: 300;
+        line-height: 1.43;
+        color: $white;
+        margin-bottom: 26px;
+
+        @media (min-width: $break_md) {
+            font-size: 18px;
+        }
+    }
+
+    &__delivery-results-text-cost {
+        font-family: $second-family;
+        font-size: inherit;
+        font-weight: bold;
+        line-height: inherit;
+        color: inherit;
     }
 }

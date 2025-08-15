@@ -1,18 +1,3 @@
-export interface DadataJson {
-    "source": string,
-    "result": string,
-    "postal_code": string,
-    "country": string,
-    "region": string,
-    "city_area": string,
-    "city_district": string,
-    "street": string,
-    "house": string,
-    "geo_lat": string,
-    "geo_lon": string,
-    "qc_geo": number
-}
-
 export interface niceSelect2Instance {
     update: Function;
     "el": HTMLElement,
@@ -53,4 +38,66 @@ export interface niceSelect2Instance {
             "element": {}
         }
     ]
+}
+
+export interface addressesResponseType {
+    "suggestions": [
+        {
+            "city_with_type": string,
+            "geo_lat": "string",
+            "geo_lon": "string",
+        },
+    ]
+}
+
+export interface formatedAddressesResponseType {
+    "value": string,
+    "lon"?: string,
+    "lat"?: string,
+}
+
+export interface SelectSettings {
+    /** Включает возможность поиска по списку */
+    searchable: boolean;
+
+    /** Подсказывающий текст-плейсхолдер для поля поиска */
+    searchtext: string;
+
+    /**
+     * Колбэк-функция, вызываемая при изменении значения поля поиска.
+     * @param input Текущее значение поля поиска.
+     */
+    onSearchInputChanged?: (input: HTMLInputElement) => void;
+
+    /**
+     * Колбэк-функция, вызываемая после обновления компонента.
+     * @param dropdown Элемент, представляющий компонент выпадающего списка.
+     */
+    afterUpdated?: (dropdown: Element) => void;
+
+    /**
+     * Колбэк-функция, вызываемая после клика на найденый город
+     * @param item
+     */
+    onClickedItem?: (item: HTMLLIElement) => void;
+
+    /**
+     * Когда открыли dropdown
+     * @param dropdown
+     */
+    onClickedSelect?: (dropdown: Element) => void;
+}
+
+export interface valueFormElementsTypes {
+    "location_0": string[],
+    "location_1": string[],
+    "weight": string
+}
+
+export type WeightCategory = 'upTo2Tons' | 'from2to5Tons' | 'from5to10Tons' | 'from10to20Tons';
+
+export interface DeliveryCostConfig {
+    minWeight: number;
+    maxWeight: number;
+    costPerKm: number;
 }

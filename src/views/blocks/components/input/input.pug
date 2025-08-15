@@ -5,5 +5,5 @@ mixin input(value = false)
                 name: value.icon,
                 class: value.iconClass ? 'input__icon ' + value.iconClass : 'input__icon'
             })
-        +e.INPUT.placeholder(class=value['placeholderClass'] placeholder=value['placeholder'])
-        +e.LABEL.label(data-title=value['placeholder'])
+        +e.INPUT.placeholder(class=value['placeholderClass'] name=value['name'] placeholder=value['placeholder'])
+        +e.LABEL.label(data-title=value['placeholder'] data-error=value['error'])

@@ -7,6 +7,7 @@
     "dev": "webpack serve --open"
   },
   "devDependencies": {
+    "@mornya/dynamic-load-libs": "^0.3.4",
     "bemto.pug": "^2.1.0",
     "clean-webpack-plugin": "^4.0.0",
     "path": "^0.12.7",
@@ -23,6 +24,7 @@
     "@prettier/plugin-pug": "^3.4.0",
     "@splidejs/splide": "^4.1.4",
     "@splidejs/splide-extension-intersection": "^0.2.0",
+    "@types/yandex-maps": "^2.1.36",
     "bootstrap": "^5.3.6",
     "css-loader": "^7.1.2",
     "html-webpack-inline-svg-plugin": "^2.3.0",

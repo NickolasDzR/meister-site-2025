@@ -14,8 +14,9 @@ module.exports = {
     plugins: [
         new PugPlugin({
             entry: {
-                index: 'src/views/index.pug',
-                posts: 'src/views/posts.pug',
+                'index': 'src/views/index.pug',
+                'single-post': 'src/views/single-post.pug',
+                'home': 'src/views/home.pug',
             }
         }),
         new CleanWebpackPlugin(),
@@ -63,13 +64,11 @@ module.exports = {
                 }],
             },
             {
-                test: /\.(woff(2)?|ttf|otf|eot|svg)$/,
+                test: /\.woff$/,
                 type: 'asset/resource',
-                include: /assets\/fonts|node_modules/, // fonts from `assets/fonts` or `node_modules` directory only
                 generator: {
-                    // generates filename including last directory name to group fonts by name
-                    filename: (pathData) => `fonts/${path.basename(
-                        path.dirname(pathData.filename))}/[name][ext][query]`,
+                    // keep original filenames and copy images to `dist/img/`
+                    filename: 'fonts/[name].[ext]',
                 },
             },
             {

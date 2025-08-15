@@ -3,28 +3,43 @@ mixin cargoCalc(value = false)
         +closeButton({
             class: 'cargo-calc__close-button'
         })
-        +e.FORM.form
+        +e.form-wrapper
             +e.P.title= value['title']
-            +e.content
-                +select({
-                    options: ['Выберете место загрузки'],
-                    parentClass: 'cargo-calc__input',
-                    icon: 'location',
-                })
-                +select({
-                    options: ['Выберете место выгрузки'],
-                    parentClass: 'cargo-calc__input',
-                    icon: 'location',
-                })
-                +input({
-                    placeholder: 'Тоннаж',
-                    class: 'cargo-calc__input',
-                    placeholderClass: 'cargo-calc__placeholder',
-                    icon: 'weight',
-                    iconClass: 'cargo-calc__placeholder-icon'
-                })
-                +button({
-                    type: 'keppel',
-                    class: 'cargo-calc__button',
-                    text: 'Рассчитать доставку',
-                })
+            +e.form-inner
+                +e.delivery-results
+                    +e.delivery-results-wrapper
+                    +button({
+                        type: 'keppel',
+                        class: 'cargo-calc__button-results',
+                        text: 'Понятно',
+                    })
+                +e.FORM.form
+                    +e.content
+                        +select({
+                            options: ['Выберете место загрузки'],
+                            error: 'Введите значение',
+                            parentClass: 'cargo-calc__input',
+                            icon: 'location',
+                            name: 'location_0'
+                        })
+                        +select({
+                            options: ['Выберете место выгрузки'],
+                            error: 'Введите значение',
+                            parentClass: 'cargo-calc__input',
+                            icon: 'location',
+                            name: 'location_1'
+                        })
+                        +input({
+                            placeholder: 'Тоннаж',
+                            error: 'Введите значение',
+                            class: 'cargo-calc__input',
+                            placeholderClass: 'cargo-calc__placeholder',
+                            icon: 'weight',
+                            iconClass: 'cargo-calc__placeholder-icon',
+                            name: 'weight'
+                        })
+                        +button({
+                            type: 'keppel',
+                            class: 'cargo-calc__button',
+                            text: 'Рассчитать доставку',
+                        })
